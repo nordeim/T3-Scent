@@ -4,3 +4,6 @@ Help me to create a T3 app for my e-commerce platform. Use the following project
 
 ---
 awesome job! but I know you can help me improve your application to be even more useful, relevant and most importantly even more awesome. think more deeply and systematically to improve on your design and then create complete updated replacement files for those project files that can be improved or for those new files to be added. please proceed to create.
+
+---
+awesome improvement! now carefully review your latest design and then think more deeply and explore systematically and thoroughly how to enhance the web application platform. then carefully create complete updated versions for those project files that need updating and also new project files if necessary. think carefully and then plan before making changes.
