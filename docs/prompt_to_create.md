@@ -9,3 +9,6 @@ awesome job! but I know you can help me improve your application to be even more
 you have made a really awesome improvement! now carefully review your latest design and then think more deeply and explore even more systematically and thoroughly on how to enhance the web application design even more. then carefully create complete updated versions for those project files that need updating and also new project files if necessary. think carefully and then plan before making changes.
 
 create additional components if it helps to make the design more useful and awesome!
+
+---
+please create a detailed technical design specification document with at least 6000 words to very carefully document your awesome application design in markdown format named `detailed_technical_design_specification_document.md`. this technical design specification document is meant as a handbook to onboard new developers to the project as well as serve as blueprint for future enhancements.
