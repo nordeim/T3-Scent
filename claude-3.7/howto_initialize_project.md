@@ -1,3 +1,21 @@
+## Getting Started
+
+First, let's create a new T3 app:
+
+```bash
+npx create-t3-app@latest the-scent
+```
+
+During the setup, select:
+- TypeScript
+- Next.js
+- tRPC
+- Tailwind CSS
+- Prisma
+- NextAuth.js
+
+---
+
 $ npm create t3-app@latest
 Need to install the following packages:
 create-t3-app@7.39.3

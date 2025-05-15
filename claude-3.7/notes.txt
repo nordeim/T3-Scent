@@ -1,0 +1,26 @@
+**Note on `createTRPCContext` for App Router:** The `createTRPCContext` function I provided earlier was for Pages Router. For App Router, it typically looks like this if you are creating it from scratch for a `fetchRequestHandler`:
+```typescript
+// Example adapted createTRPCContext for App Router Route Handler
+// import { getServerAuthSession } from "~/server/auth"; // Assuming this can work with NextRequest cookies
+// import { db } from "~/server/db";
+//
+// export const createTRPCContext = async (opts: { headers: Headers }) => {
+//   // If you need to get session from headers (e.g. mobile app, not browser with cookies)
+//   // For browser, cookies should be passed automatically by fetch.
+//   // const session = await getSessionFromHeaders(opts.headers); // Custom logic
+//   // OR, if NextAuth can work with request object (might need to pass `req` from handler)
+//   // const session = await getServerAuthSession({ req: ???, res: ??? }); // This is tricky here.
+//   // Often, for server components, you get session directly. For route handlers, session might be from cookies.
+//
+//   // A simpler context for route handlers if session is not strictly needed for ALL tRPC routes,
+//   // or if protected procedures handle session checks internally.
+//   return {
+//     db,
+//     session: null, // Or attempt to get session via cookies if possible
+//                    // getServerSession in route handlers is a bit different.
+//                    // See official NextAuth.js docs for App Router.
+//   };
+// };
+```
+The `create-t3-app` for App Router will scaffold a `createContext` that works with `fetchRequestHandler` and handles session appropriately (usually by reading cookies or relying on NextAuth's helpers that work with `NextRequest`). My previously generated `createTRPCContext` using `getServerAuthSession({ req, res })` from Pages Router's `CreateNextContextOptions` will need adjustment. For now, I've used the passed `req.headers`. The critical part is how `getServerAuthSession` is invoked or how session is derived within `createTRPCContext` when called from a Route Handler. `create-t3-app` handles this boilerplate.
+
