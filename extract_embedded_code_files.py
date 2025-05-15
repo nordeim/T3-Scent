@@ -17,7 +17,7 @@ def extract_code_blocks(input_file):
         line = lines[i].rstrip('\n')
         
         # Check if this line starts a code block
-        code_block_match = re.match(r'^```(ts|py|sql|php)', line.strip())
+        code_block_match = re.match(r'^```(ts|py|sql|php|typescript|markdown|tsx|prisma|js)', line.strip())
         
         if code_block_match:
             # Move to the next line which should contain the filename
