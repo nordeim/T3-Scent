@@ -415,3 +415,50 @@ With these SQL commands, the updated `.env` file, and the adjusted `src/env.mjs`
 
 ---
 https://drive.google.com/file/d/10qxhCB7k2c3G73SUaEIfKVKSqgWSjkQo/view?usp=sharing, https://drive.google.com/file/d/19R6AOLUeAYzo73Zkt5WTqLrdQLvjfEq9/view?usp=sharing, https://drive.google.com/file/d/1M29mvmeDZQQ5X72Yfx2_0-vycXBG5pF8/view?usp=sharing, https://drive.google.com/file/d/1NC4s3DVR1LDzX-LCZlMMd5NrShFBidnd/view?usp=sharing, https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221QNYodene0vrlxMvFDFKJ0CSSeS2lX2t2%22%5D,%22action%22:%22open%22,%22userId%22:%22103961307342447084491%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing, https://drive.google.com/file/d/1qxPDWhlmzq9-R3H1YDAVwCyPjpwQ4ZJO/view?usp=sharing
+
+---
+Your error message indicates that the collation `en_US.UTF-8` is incompatible with the collation of the template database (`C.UTF-8`). PostgreSQL uses `template1` as the default template when creating new databases, and its collation settings must match those of your new database.
+
+### **Fix: Use `template0` Instead**
+Since `template0` allows more flexibility in encoding and collation settings, modify your `CREATE DATABASE` command to explicitly use `template0`:
+
+```sql
+CREATE DATABASE the_scent
+    WITH
+    OWNER = scent_user
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TEMPLATE = template0
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+```
+
+### **Steps to Fix:**
+1. **Edit `create_database_user.sql`**  
+   Open your SQL file and add `TEMPLATE = template0` to the `CREATE DATABASE` statement.
+
+2. **Run the Command Again:**  
+   ```bash
+   sudo -u postgres PGPASSWORD="Admin1234" psql -h localhost -f create_database_user.sql
+   ```
+
+### **Alternative Approach**
+If you prefer to create the database manually before running your script, try:
+```bash
+sudo -u postgres PGPASSWORD="Admin1234" psql -h localhost
+```
+Then inside the interactive PostgreSQL session:
+```sql
+CREATE DATABASE the_scent
+    WITH
+    OWNER = scent_user
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TEMPLATE = template0;
+```
+Then exit (`\q`) and re-run your SQL script.
+
+This should resolve the collation issue. Let me know if anything unexpected happens!
+

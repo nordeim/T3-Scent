@@ -4,14 +4,26 @@ CREATE USER scent_user WITH PASSWORD 'ScentAdmin%123';
 
 -- Create the database named 'the_scent'.
 -- It's often good practice for the application user to own its database.
+-- CREATE DATABASE the_scent
+--     WITH
+--     OWNER = scent_user          -- Set scent_user as the owner
+--     ENCODING = 'UTF8'           -- Standard encoding
+--     LC_COLLATE = 'en_US.UTF-8'  -- Or your preferred locale for collation
+--     LC_CTYPE = 'en_US.UTF-8'    -- Or your preferred locale for character type
+--     TABLESPACE = pg_default
+--     CONNECTION LIMIT = -1;      -- Default connection limit
+
 CREATE DATABASE the_scent
     WITH
-    OWNER = scent_user          -- Set scent_user as the owner
-    ENCODING = 'UTF8'           -- Standard encoding
-    LC_COLLATE = 'en_US.UTF-8'  -- Or your preferred locale for collation
-    LC_CTYPE = 'en_US.UTF-8'    -- Or your preferred locale for character type
+    OWNER = scent_user
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TEMPLATE = template0
     TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;      -- Default connection limit
+    CONNECTION LIMIT = -1;
+
+-- sudo -u postgres PGPASSWORD="AdminPassword" psql -h localhost -f create_database_user.sql
 
 -- Optional: If you want to ensure the user can create extensions if needed by Prisma or other tools
 -- (e.g., for UUID generation if not using CUIDs, though Prisma's CUIDs don't need this).
