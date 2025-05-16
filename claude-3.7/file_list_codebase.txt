@@ -1,0 +1,114 @@
+$ find tailwind.config.ts tsconfig.json postcss.config.js package.json src prisma public
+tailwind.config.ts
+tsconfig.json
+postcss.config.js
+package.json
+src
+src/pages
+src/pages/account
+src/pages/admin
+src/pages/products
+src/pages/products/[slug].tsx
+src/pages/auth
+src/pages/api
+src/pages/api/webhooks
+src/pages/api/auth
+src/pages/api/trpc
+src/styles
+src/styles/globals.css
+src/app
+src/app/layout.tsx
+src/app/providers.tsx
+src/app/products
+src/app/products/[slug]
+src/app/products/[slug]/page.tsx
+src/app/products/[slug]/ProductClientInteractions.tsx
+src/app/page.tsx
+src/app/_components
+src/app/_components/post.tsx
+src/app/api
+src/app/api/auth
+src/app/api/auth/[...nextauth]
+src/app/api/auth/[...nextauth]/route.ts
+src/app/api/trpc
+src/app/api/trpc/[trpc]
+src/app/api/trpc/[trpc]/route.ts
+src/app/HomePageClientInteractions.tsx
+src/components
+src/components/layout
+src/components/checkout
+src/components/admin
+src/components/admin/rbac
+src/components/admin/analytics
+src/components/admin/inventory
+src/components/cart
+src/components/ui
+src/components/ui/ThemeToggle.tsx
+src/components/ui/AudioToggle.tsx
+src/components/ui/Button.tsx
+src/components/products
+src/components/auth
+src/components/loyalty
+src/components/smart-home
+src/components/subscription
+src/components/common
+src/components/quiz
+src/hooks
+src/utils
+src/utils/api.ts
+src/utils/format.ts
+src/env.mjs
+src/server
+src/server/db.ts
+src/server/auth
+src/server/auth/index.ts
+src/server/auth/config.ts
+src/server/api
+src/server/api/trpc.ts
+src/server/api/root.ts
+src/server/api/routers
+src/server/api/routers/admin
+src/server/api/routers/admin/products.ts
+src/server/api/routers/orders.ts
+src/server/api/routers/products.ts
+src/server/api/routers/post.ts
+src/server/api/routers/recommendations.ts
+src/server/auth.ts
+src/contexts
+src/contexts/CartContext.tsx
+src/lib
+src/trpc
+src/trpc/query-client.ts
+src/trpc/server.ts
+src/trpc/react.tsx
+src/types
+src/types/product.ts
+src/env.js
+prisma
+prisma/schema.prisma
+public
+public/fonts
+public/sounds
+public/favicon.ico
+public/icons
+public/videos
+public/images
+pete@pop-os:/cdrom/project/T3-Scent/claude-3.7
+
+$ ls -l | egrep -v 'sql$|txt$|\.md$'
+total 1380
+-rw-rw-r--   1 pete pete   1216 May 15 09:12 eslint.config.js
+-rw-rw-r--   1 pete pete    201 May 15 09:11 next-env.d.ts
+-rw-rw-r--   1 pete pete    239 May 15 09:11 next.config.js
+drwxrwxr-x 366 pete pete  16384 May 16 08:44 node_modules
+-rw-rw-r--   1 pete pete 268831 May 16 08:44 package-lock.json
+-rw-rw-r--   1 pete pete   1730 May 15 09:11 package.json
+-rw-rw-r--   1 pete pete     70 May 15 09:11 postcss.config.js
+-rw-rw-r--   1 pete pete    159 May 15 09:11 prettier.config.js
+drwxrwxr-x   2 pete pete   4096 May 16 08:44 prisma
+drwxrwxr-x   7 pete pete   4096 May 15 09:11 public
+drwxrwxr-x  13 pete pete   4096 May 15 20:04 src
+-rwxr-xr-x   1 pete pete   2942 May 15 09:11 start-database.sh
+-rw-rw-r--   1 pete pete   4281 May 15 14:59 tailwind.config.ts
+-rw-rw-r--   1 pete pete    870 May 15 09:11 tsconfig.json
+
