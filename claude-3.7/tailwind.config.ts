@@ -1,18 +1,19 @@
 // tailwind.config.ts
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
+// import { fontFamily } from "tailwindcss/defaultTheme"; // Old
+import defaultTheme from "tailwindcss/defaultTheme"; // New
 
 export default {
   darkMode: "class",
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}", // Keep if you have any Pages Router structure left (e.g. for some API routes not in app/api)
     "./src/components/**/*.{js,ts,jsx,tsx}",
-    "./src/app/**/*.{js,ts,jsx,tsx}", // If using App Router in future
+    "./src/app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    container: { // Optional: Configure default container padding
+    container: {
       center: true,
-      padding: "1rem", // Default padding
+      padding: "1rem",
       screens: {
         sm: "640px",
         md: "768px",
@@ -31,14 +32,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          // From original doc, can be mapped to HSL vars or kept as direct values
-          light: "#4fd1c5", // Consider if this is needed or if primary variants are enough
-          dark: "#1a5b68",  // Consider if this is needed
+          light: "#4fd1c5",
+          dark: "#1a5b68", 
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
-          // From original doc
           light: "#f6ad55",
           dark: "#c67c3e",
         },
@@ -50,8 +49,8 @@ export default {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: { // CTA colors from original, mapped to 'accent' for Shadcn/ui
-          DEFAULT: "hsl(var(--accent))", // Was cta.DEFAULT "#ff7b4f"
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
           light: "#ff8c69",
           dark: "#e25c39",
@@ -64,10 +63,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom colors from original theme:
-        // primary: { DEFAULT: "#2a7c8a", light: "#4fd1c5", dark: "#1a5b68" },
-        // accent (original): { DEFAULT: "#e0a86f", light: "#f6ad55", dark: "#c67c3e" },
-        // cta (original): { DEFAULT: "#ff7b4f", light: "#ff8c69", dark: "#e25c39" },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -75,9 +70,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        // Example: if you add a display font
-        // display: ["var(--font-display)", ...fontFamily.sans],
+        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans], // Corrected usage
+        // display: ["var(--font-display)", ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
@@ -109,7 +103,7 @@ export default {
     },
   },
   plugins: [
-    require("tailwindcss-animate"), // Commonly used with Shadcn/ui
+    require("tailwindcss-animate"),
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
   ],

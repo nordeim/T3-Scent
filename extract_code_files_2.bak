@@ -111,7 +111,7 @@ def extract_files(input_file_path, encoding):
                     comment_match = comment_filename_pattern.match(next_line)
                     if comment_match:
                         filename = normalize_path(comment_match.group(1))
-                        # Do not skip this line, so it will be included in the content
+                        i += 1  # Skip the filename line
                 
                 # If no valid filename found, reject this block
                 if not filename:

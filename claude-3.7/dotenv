@@ -21,6 +21,9 @@ GOOGLE_CLIENT_SECRET="" # Your Google Client Secret
 # Optional: Discord Provider (as in your original .env)
 # AUTH_DISCORD_ID=""
 # AUTH_DISCORD_SECRET=""
+# Next Auth Discord Provider
+AUTH_DISCORD_ID=""
+AUTH_DISCORD_SECRET=""
 
 # Stripe Configuration (Use TEST keys for development)
 STRIPE_SECRET_KEY="sk_test_YOUR_STRIPE_TEST_SECRET_KEY"

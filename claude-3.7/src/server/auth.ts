@@ -1,90 +1,48 @@
 // src/server/auth.ts
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type GetServerSidePropsContext } from "next";
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-  type User as NextAuthUserInternal,
-} from "next-auth";
+import NextAuth, { type DefaultSession, type User as NextAuthUser } from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter"; // Corrected import
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "~/server/db";
 import { compare } from "bcryptjs";
-import { env } from "~/env.mjs";
-import type { Role as PrismaAppRole } from "@prisma/client"; // Renamed to avoid conflict
+import { env } from "~/env.js"; // Assuming your env file is .js based on error logs
+import type { Role as PrismaAppRole } from "@prisma/client";
 
-// Define a more specific User type for NextAuth that includes roleId
-interface AppInternalUser extends NextAuthUserInternal {
-  id: string;
-  role: PrismaAppRole;
-  roleDefinitionId?: string | null; // For advanced RBAC
-}
-
+// Define your extended User and Session types for NextAuth.js v5
+// The 'User' type from next-auth here refers to the shape of the user object
+// that providers return and that is available in callbacks.
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: AppInternalUser & DefaultSession["user"];
+    user: {
+      id: string;
+      role: PrismaAppRole;
+      roleDefinitionId?: string | null;
+    } & DefaultSession["user"]; // Includes name, email, image from DefaultSession["user"]
   }
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface User extends AppInternalUser {}
+
+  // This is the user object passed to JWT and session callbacks, and returned by `auth()`
+  interface User extends NextAuthUser { // Extends the base NextAuthUser
+    role: PrismaAppRole;
+    roleDefinitionId?: string | null;
+  }
 }
 
-declare module "next-auth/jwt" {
+// If using JWT strategy, extend the JWT type
+declare module "@auth/core/jwt" { // Note: path for JWT type in v5 might be different, check docs if issue
   interface JWT {
     id: string;
     role: PrismaAppRole;
     roleDefinitionId?: string | null;
-    // Add any other properties you want to persist in the JWT
-    name?: string | null;
-    email?: string | null;
-    picture?: string | null;
+    // name, email, picture are often included by default with OAuth
   }
 }
 
-export const authOptions: NextAuthOptions = {
-  callbacks: {
-    jwt: async ({ token, user, account, profile }) => {
-      // `user` is available on first sign-in (credentials or OAuth)
-      if (user) {
-        token.id = user.id;
-        token.role = user.role; // This is AppInternalUser from authorize or OAuth profile mapping
-        token.roleDefinitionId = user.roleDefinitionId;
-        token.name = user.name;
-        token.email = user.email;
-        token.picture = user.image; // NextAuth User type uses 'image'
-      }
-      // `account` & `profile` are available on OAuth sign-in
-      // Can use these to update user profile, e.g., fetch more details from Google
-      return token;
-    },
-    session: ({ session, token }) => {
-      if (token && session.user) {
-        session.user.id = token.id;
-        session.user.role = token.role;
-        session.user.roleDefinitionId = token.roleDefinitionId;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.image = token.picture; // Map from JWT's 'picture' to session's 'image'
-      }
-      return session;
-    },
-  },
+export const authConfig = { // Renamed to authConfig for clarity, can still be authOptions
   adapter: PrismaAdapter(db),
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      // Optional: customize profile to ensure role is handled if needed
-      // profile(profile) {
-      //   return {
-      //     id: profile.sub,
-      //     name: profile.name,
-      //     email: profile.email,
-      //     image: profile.picture,
-      //     role: "CUSTOMER", // Default role for new OAuth users
-      //     // roleDefinitionId: null, // Or fetch/assign a default RoleDefinition
-      //   };
-      // },
+      clientId: env.GOOGLE_CLIENT_ID || "", // Provide default empty string if optional
+      clientSecret: env.GOOGLE_CLIENT_SECRET || "",
     }),
     CredentialsProvider({
       name: "credentials",
@@ -97,117 +55,87 @@ export const authOptions: NextAuthOptions = {
           console.error("Auth: Missing credentials");
           return null;
         }
+        const email = credentials.email as string;
+        const password = credentials.password as string;
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: email },
         });
 
         if (!user) {
-          console.error("Auth: No user found with email:", credentials.email);
+          console.error("Auth: No user found with email:", email);
           return null;
         }
         if (!user.password) {
-          console.error("Auth: User found but no password set (e.g. OAuth user):", credentials.email);
+          console.error("Auth: User found but no password set:", email);
           return null;
         }
 
-        const isValidPassword = await compare(credentials.password, user.password);
-
+        const isValidPassword = await compare(password, user.password);
         if (!isValidPassword) {
-          console.error("Auth: Invalid password for user:", credentials.email);
+          console.error("Auth: Invalid password for user:", email);
           return null;
         }
         
-        console.log("Auth: Credentials successful for:", user.email);
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           image: user.image,
-          role: user.role, // from Prisma schema
+          role: user.role,
           roleDefinitionId: user.roleDefinitionId,
-        };
+        }; // This object must match the NextAuth `User` interface structure
       },
     }),
   ],
-  pages: {
-    signIn: "/auth/signin",
-    signOut: '/auth/signout',
-    error: '/auth/error', 
-    verifyRequest: '/auth/verify-request',
-    newUser: "/auth/welcome", // Redirect new OAuth users to a welcome/profile completion page
+  callbacks: {
+    // The `user` param here is the object returned from `authorize` or OAuth profile
+    jwt: async ({ token, user }) => {
+      if (user) {
+        // Persist these properties to the JWT
+        token.id = user.id;
+        token.role = user.role; // user.role comes from authorize() or OAuth profile mapping
+        token.roleDefinitionId = user.roleDefinitionId;
+        // Standard OAuth claims like name, email, picture are often automatically added to token
+        // token.name = user.name;
+        // token.email = user.email;
+        // token.picture = user.image;
+      }
+      return token;
+    },
+    // The `token` param here is the JWT from the `jwt` callback
+    session: ({ session, token }) => {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as PrismaAppRole;
+        session.user.roleDefinitionId = token.roleDefinitionId as string | undefined | null;
+        // session.user.name = token.name; // Already part of DefaultSession["user"]
+        // session.user.email = token.email; // Already part of DefaultSession["user"]
+        // session.user.image = token.picture; // Already part of DefaultSession["user"]
+      }
+      return session;
+    },
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  jwt: {
-    // secret: env.NEXTAUTH_SECRET, // Automatically handled by NextAuth if NEXTAUTH_SECRET is set
-    maxAge: 30 * 24 * 60 * 60,
+  pages: {
+    signIn: "/auth/signin",
+    // newUser: "/auth/welcome", // If you have a specific page for new OAuth users
   },
-  // debug: env.NODE_ENV === "development",
-  // secret: env.NEXTAUTH_SECRET, // Redundant if NEXTAUTH_SECRET is in env
-};
+  // secret: env.AUTH_SECRET, // Auth.js v5 uses AUTH_SECRET from env by default
+  trustHost: env.AUTH_TRUST_HOST, // From env.js
+  // basePath: "/api/auth", // Default, usually not needed to set explicitly
+} satisfies Parameters<typeof NextAuth>[0]; // Type assertion for config
 
-export const getServerAuthSession = async (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
-}) => {
-  return getServerSession(ctx.req, ctx.res, authOptions);
-};
+// Export handlers and auth function for App Router
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
 
-// HOC for protecting pages server-side
-export const withAuthProtection = <
-  P extends { [key: string]: unknown } = { [key: string]: unknown },
->(
-  handler?: (
-    context: GetServerSidePropsContext,
-    session: Session // Pass session to handler
-  ) => Promise<{ props: P } | { redirect: { destination: string; permanent: boolean } }>,
-  requiredRoles?: PrismaAppRole[],
-) => {
-  return async (
-    context: GetServerSidePropsContext,
-  ): Promise<{ props: P } | { redirect: { destination: string; permanent: boolean } }> => {
-    const session = await getServerAuthSession(context);
-
-    if (!session) {
-      return {
-        redirect: {
-          destination: `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
-          permanent: false,
-        },
-      };
-    }
-
-    if (requiredRoles && requiredRoles.length > 0 && !requiredRoles.includes(session.user.role)) {
-      // Here you might also check advanced RBAC using session.user.roleDefinitionId and its permissions
-      return {
-        redirect: {
-          destination: "/unauthorized", // A generic unauthorized page
-          permanent: false,
-        },
-      };
-    }
-
-    if (handler) {
-      return handler(context, session);
-    }
-
-    // If no specific handler, pass session as a prop (useful for client-side checks or display)
-    return { props: { session } as P & { session: Session } };
-  };
-};
-
-export const withAdminAuth = <
-  P extends { [key: string]: unknown } = { [key: string]: unknown },
->(
-  handler?: (
-    context: GetServerSidePropsContext,
-    session: Session
-  ) => Promise<{ props: P } | { redirect: { destination: string; permanent: boolean } }>,
-) => {
-  // Ensure ADMIN and MANAGER roles are correctly typed from Prisma
-  const adminRoles: PrismaAppRole[] = [PrismaAppRole.ADMIN, PrismaAppRole.MANAGER];
-  return withAuthProtection(handler, adminRoles);
-};
+// You can still create a helper to get session in server components for convenience
+// if you don't want to call `await auth()` everywhere.
+// However, `await auth()` is the idiomatic way in App Router Server Components.
+// export const getServerActionAuthSession = async () => {
+//   const session = await auth(); // auth() can be called directly in Server Components/Actions
+//   if (!session?.user) return null;
+//   return session;
+// };
