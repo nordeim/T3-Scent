@@ -1,26 +1,39 @@
 // src/components/products/ProductGrid.tsx
 import React from 'react';
-import { ProductCard } from '~/components/common/ProductCard'; // Assuming ProductCard component
-import type { RouterOutputs } from '~/utils/api'; // For product type
+import { ProductCard } from '~/components/common/ProductCard'; 
+import type { RouterOutputs } from '~/utils/api';
 
-// Use a more specific type for products, e.g., from your tRPC output or a custom type
-type Product = RouterOutputs["products"]["getAll"]["items"][number]; // Example type
+// Using the specific product type from the getAll procedure's output items
+type ProductInGrid = RouterOutputs["products"]["getAll"]["items"][number];
 
 interface ProductGridProps {
-  products: Product[];
-  isLoading?: boolean; // Optional loading state for skeleton loaders
-  itemsPerPage?: number; // For skeleton placeholders
+  products?: ProductInGrid[]; // Make products optional for loading/empty states
+  isLoading?: boolean;
+  skeletonsCount?: number; // How many skeletons to show
+  className?: string;
+  emptyStateMessage?: string;
 }
 
-export const ProductGrid = ({ products, isLoading, itemsPerPage = 4 }: ProductGridProps) => {
+export const ProductGrid = ({ 
+  products, 
+  isLoading = false, 
+  skeletonsCount = 4, 
+  className,
+  emptyStateMessage = "No products found matching your criteria." 
+}: ProductGridProps) => {
+  
+  const gridClasses = "grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8";
+
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {Array.from({ length: itemsPerPage }).map((_, index) => (
-          <div key={index} className="group animate-pulse">
-            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-muted xl:aspect-h-8 xl:aspect-w-7"></div>
+      <div className={cn(gridClasses, className)}>
+        {Array.from({ length: skeletonsCount }).map((_, index) => (
+          // Basic Skeleton for ProductCard
+          <div key={`skeleton-${index}`} className="group animate-pulse">
+            <div className="aspect-[3/4] w-full overflow-hidden rounded-lg bg-muted"></div>
             <div className="mt-4 h-4 w-3/4 rounded bg-muted"></div>
-            <div className="mt-1 h-6 w-1/2 rounded bg-muted"></div>
+            <div className="mt-2 h-6 w-1/2 rounded bg-muted"></div>
+            <div className="mt-2 h-4 w-1/4 rounded bg-muted"></div>
           </div>
         ))}
       </div>
@@ -28,14 +41,24 @@ export const ProductGrid = ({ products, isLoading, itemsPerPage = 4 }: ProductGr
   }
 
   if (!products || products.length === 0) {
-    return <p className="text-center text-muted-foreground">No products found.</p>;
+    return (
+      <div className="py-12 text-center">
+        <p className="text-lg text-muted-foreground">{emptyStateMessage}</p>
+        {/* Optional: Add a CTA like "Browse all products" */}
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+    <div className={cn(gridClasses, className)}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );
 };
+
+// cn utility if not globally available for this component (usually from lib/utils)
+function cn(...inputs: (string | undefined | null | boolean)[]) {
+  return inputs.filter(Boolean).join(' ');
+}

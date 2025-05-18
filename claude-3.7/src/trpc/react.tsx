@@ -1,78 +1,103 @@
-"use client";
+// src/trpc/react.tsx
+"use client"; 
 
-import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
-import { httpBatchStreamLink, loggerLink } from "@trpc/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink, loggerLink, type TRPCLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
-import { useState } from "react";
-import SuperJSON from "superjson";
+import { type ReactNode, useState } from "react";
+import { type Observable, observable } from '@trpc/server/observable';
+import { toast } from "react-hot-toast";
 
-import { type AppRouter } from "~/server/api/root";
-import { createQueryClient } from "./query-client";
-
-let clientQueryClientSingleton: QueryClient | undefined = undefined;
-const getQueryClient = () => {
-  if (typeof window === "undefined") {
-    // Server: always make a new query client
-    return createQueryClient();
-  }
-  // Browser: use singleton pattern to keep the same query client
-  clientQueryClientSingleton ??= createQueryClient();
-
-  return clientQueryClientSingleton;
-};
+import { type AppRouter } from "~/server/api/root"; 
+import { transformer, getBaseUrl } from "./shared"; // Import from shared.ts
 
 export const api = createTRPCReact<AppRouter>();
 
-/**
- * Inference helper for inputs.
- *
- * @example type HelloInput = RouterInputs['example']['hello']
- */
-export type RouterInputs = inferRouterInputs<AppRouter>;
+const errorHandlingLink: TRPCLink<AppRouter> = () => {
+  return ({ next, op }) => {
+    return observable((observer) => {
+      const unsubscribe = next(op).subscribe({
+        next(value) { observer.next(value); },
+        error(err) {
+          observer.error(err);
+          if (err.data?.code === 'UNAUTHORIZED' || err.data?.code === 'FORBIDDEN') {
+            toast.error(err.message || "Access denied. Please try logging in.");
+          } else if (err.data?.zodError) {
+            const zodErrors = err.data.zodError.fieldErrors;
+            let messages: string[] = [];
+            for (const field in zodErrors) {
+                if (zodErrors[field]) {
+                    messages = messages.concat(zodErrors[field] as string[]);
+                }
+            }
+            toast.error(`Input error: ${messages.join(', ')}`);
+          } else {
+            toast.error(err.message || "An unexpected error occurred.");
+          }
+        },
+        complete() { observer.complete(); },
+      });
+      return unsubscribe;
+    });
+  };
+};
 
-/**
- * Inference helper for outputs.
- *
- * @example type HelloOutput = RouterOutputs['example']['hello']
- */
-export type RouterOutputs = inferRouterOutputs<AppRouter>;
+interface TRPCReactProviderProps {
+  children: ReactNode;
+  headers?: Headers; 
+}
 
-export function TRPCReactProvider(props: { children: React.ReactNode }) {
-  const queryClient = getQueryClient();
+export function TRPCReactProvider({ children, headers: passedHeaders }: TRPCReactProviderProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 60 * 1000, 
+            refetchOnWindowFocus: true,
+            retry: (failureCount, error: any) => {
+              if (error.data?.code === 'UNAUTHORIZED' || error.data?.code === 'FORBIDDEN' || error.data?.code === 'NOT_FOUND') {
+                return false;
+              }
+              return failureCount < 2;
+            },
+          },
+        },
+      })
+  );
 
   const [trpcClient] = useState(() =>
     api.createClient({
+      transformer, // Use shared transformer
       links: [
+        errorHandlingLink,
         loggerLink({
-          enabled: (op) =>
+          enabled: (opts) =>
             process.env.NODE_ENV === "development" ||
-            (op.direction === "down" && op.result instanceof Error),
+            (opts.direction === "down" && opts.result instanceof Error),
         }),
-        httpBatchStreamLink({
-          transformer: SuperJSON,
-          url: getBaseUrl() + "/api/trpc",
-          headers: () => {
-            const headers = new Headers();
-            headers.set("x-trpc-source", "nextjs-react");
-            return headers;
+        httpBatchLink({
+          url: getBaseUrl() + "/api/trpc", // Use shared getBaseUrl
+          headers() {
+            const heads = new Map(passedHeaders); 
+            heads.set("x-trpc-source", "react-client"); 
+            
+            const headerObject: Record<string, string> = {};
+            heads.forEach((value, key) => {
+              headerObject[key] = value;
+            });
+            return headerObject;
           },
         }),
       ],
-    }),
+    })
   );
 
   return (
     <QueryClientProvider client={queryClient}>
       <api.Provider client={trpcClient} queryClient={queryClient}>
-        {props.children}
+        {children}
       </api.Provider>
     </QueryClientProvider>
   );
-}
-
-function getBaseUrl() {
-  if (typeof window !== "undefined") return window.location.origin;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return `http://localhost:${process.env.PORT ?? 3000}`;
 }

@@ -2,21 +2,23 @@
 "use client";
 
 import { useRef, useEffect, useState, type ReactNode } from "react";
-import Image from "next/image";
-import { AudioToggle } from "~/components/ui/AudioToggle";
-import type { RouterOutputs } from "~/utils/api"; // For product type
+// import Image from "next/image"; // Not directly used here for rendering, but parent might.
+import { AudioToggle } from "~/components/ui/AudioToggle"; // Import AudioToggle
+import type { RouterOutputs } from "~/utils/api";
 
 interface HomePageClientInteractionsProps {
-  children: ReactNode; // For static content from server component
-  featuredProducts: RouterOutputs["products"]["getAll"]["items"]; // Type for featured products
+  children: ReactNode; // Static hero content passed from Server Component
+  // featuredProducts are fetched by parent, passed if this component needs them, but not used in this version.
+  // featuredProducts: RouterOutputs["products"]["getAll"]["items"]; 
 }
 
-export default function HomePageClientInteractions({ children, featuredProducts }: HomePageClientInteractionsProps) {
+export default function HomePageClientInteractions({ children }: HomePageClientInteractionsProps) {
   const heroRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null); // If About section parallax is client-side
   const [scrollY, setScrollY] = useState(0);
+  const [isMounted, setIsMounted] = useState(false); // For AudioToggle or other client-only elements
 
   useEffect(() => {
+    setIsMounted(true); // Component has mounted on client
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
@@ -24,20 +26,14 @@ export default function HomePageClientInteractions({ children, featuredProducts 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const heroOpacity = Math.max(0, Math.min(1, 1 - scrollY / 700));
-  const heroTransform = `translateY(${scrollY * 0.5}px)`;
-
-  // Calculate parallax for about section images (if this logic is kept client-side)
-  // This requires the about section to be part of this client component or its ref passed down.
-  // For simplicity, I'm assuming the static About section is rendered by the Server Component,
-  // and more complex parallax on its images might need a separate Client Component wrapper for them.
+  const heroOpacity = isMounted ? Math.max(0.2, Math.min(1, 1 - scrollY / 700)) : 1; // Ensure some visibility initially
+  const heroTransform = `translateY(${isMounted ? scrollY * 0.4 : 0}px)`; // Reduced parallax factor
 
   return (
     <>
-      {/* Hero Section with Video Background */}
-      <div ref={heroRef} className="relative h-screen overflow-hidden">
+      <div ref={heroRef} className="relative h-screen overflow-hidden bg-gray-900"> {/* Added bg for video load fallback */}
         <div
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 transition-opacity duration-300" // Added transition
           style={{
             opacity: heroOpacity,
             transform: heroTransform,
@@ -47,34 +43,29 @@ export default function HomePageClientInteractions({ children, featuredProducts 
             autoPlay
             loop
             muted
-            playsInline // Important for mobile
+            playsInline
             className="h-full w-full object-cover"
-            poster="/images/hero-poster.jpg" // Add a poster image
+            poster="/images/hero-poster.jpg" // Ensure this poster image exists in /public/images
           >
-            <source src="/videos/hero-bg.mp4" type="video/mp4" />
+            <source src="/videos/hero-bg.mp4" type="video/mp4" /> {/* Ensure this video exists */}
             Your browser does not support the video tag.
           </video>
-          <div className="absolute inset-0 bg-black/30 dark:bg-black/50" /> {/* Adjusted overlay */}
+          <div className="absolute inset-0 bg-black/40 dark:bg-black/60" /> {/* Darker overlay */}
         </div>
         
-        <div className="absolute right-4 top-4 z-50 md:right-6 md:top-6">
-          <AudioToggle />
-        </div>
+        {/* AudioToggle positioned within the hero */}
+        {isMounted && ( // Only render AudioToggle on the client after mount
+          <div className="absolute right-4 top-4 z-50 md:right-6 md:top-6">
+            <AudioToggle audioSrc="/sounds/ambient-nature.mp3" /> {/* Ensure sound file exists */}
+          </div>
+        )}
         
-        {/* Render children passed from Server Component (e.g., static text content for hero) */}
-        {children}
+        {/* Render children (static hero text content) passed from Server Component */}
+        {/* The children (text content) will also appear to have parallax due to parent transform */}
+        <div className="relative z-10 flex h-full items-center justify-center text-center md:justify-start md:text-left">
+            {children}
+        </div>
       </div>
-
-      {/* About Section Parallax Images (If controlled client-side) */}
-      {/* If the About section itself is static, but images within it need parallax,
-          those image containers would need to be client components or have refs managed here.
-          This demonstrates complexity of mixing server/client rendering with scroll effects.
-          A simpler approach is CSS-driven parallax if possible, or dedicated client components
-          for elements that need JavaScript-driven scroll effects.
-      */}
-      {/* Example if 'aboutRef' was for a client-side rendered About section:
-      <section id="about-client" ref={aboutRef} className="py-20"> ... </section>
-      */}
     </>
   );
 }

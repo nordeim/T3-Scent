@@ -1,9 +1,5 @@
 // src/app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth";
-import { authOptions } from "~/server/auth"; // Your existing authOptions
+import { handlers } from "~/server/auth"; // Import the handlers
 
-// NextAuth() returns a handler function
-const handler = NextAuth(authOptions);
-
-// Exporting GET and POST handlers for the App Router
-export { handler as GET, handler as POST };
+// Export the handlers for GET and POST requests as required by NextAuth.js v5 with App Router
+export const { GET, POST } = handlers;

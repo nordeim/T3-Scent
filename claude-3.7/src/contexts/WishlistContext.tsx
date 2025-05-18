@@ -7,22 +7,22 @@ import React, {
     useState, 
     useEffect, 
     type ReactNode, 
-    useCallback 
+    useCallback,
+    useMemo // ADDED useMemo here
 } from 'react';
 import { toast } from 'react-hot-toast';
-import { api } from '~/utils/api'; // For tRPC calls
+import { api } from '~/trpc/react'; // Corrected: Use api from trpc/react for client components
 import { useSession } from 'next-auth/react';
-import { useLocalStorage } from '~/hooks/useLocalStorage'; // Assuming this hook
+import { useLocalStorage } from '~/hooks/useLocalStorage';
 
 // Define the shape of a wishlist item
 export interface WishlistItemClient {
   id: string; // Product ID
-  variantId?: string | null; // Optional: ProductVariant ID
+  variantId?: string | null; 
   name: string;
   price: number;
   imageUrl?: string | null;
-  slug: string; // For linking
-  // Potentially add addedAt client-side if not syncing immediately
+  slug: string; 
 }
 
 interface WishlistContextType {
@@ -30,8 +30,8 @@ interface WishlistContextType {
   addToWishlist: (item: WishlistItemClient) => void;
   removeFromWishlist: (productId: string, variantId?: string | null) => void;
   isInWishlist: (productId: string, variantId?: string | null) => boolean;
-  clearWishlist: () => void; // Clear local and potentially remote wishlist
-  isLoading: boolean; // For async operations like syncing with backend
+  clearWishlist: () => void; 
+  isLoading: boolean; 
   itemCount: number;
 }
 
@@ -54,78 +54,96 @@ interface WishlistProviderProps {
 export const WishlistProvider = ({ children }: WishlistProviderProps) => {
   const { data: session, status: sessionStatus } = useSession();
   const [localItems, setLocalItems] = useLocalStorage<WishlistItemClient[]>(WISHLIST_STORAGE_KEY, []);
-  const [syncedItems, setSyncedItems] = useState<WishlistItemClient[]>([]); // Items from DB for logged-in user
-  const [isLoading, setIsLoading] = useState(true); // Initial loading state
+  const [syncedItems, setSyncedItems] = useState<WishlistItemClient[]>([]); 
+  const [isLoadingInitialDB, setIsLoadingInitialDB] = useState(true); 
 
-  // tRPC queries/mutations
-  const { data: dbWishlist, refetch: refetchDbWishlist, isLoading: isLoadingDbWishlist } = 
-    api.wishlist.getWishlist.useQuery(undefined, {
-      enabled: sessionStatus === "authenticated",
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      onSuccess: (data) => {
-        const mappedData = data.map(item => ({
-          id: item.product.id,
-          variantId: item.variantId, // Ensure your getWishlist returns variantId
-          name: item.product.name,
-          // Ensure price and imageUrl are correctly mapped from Product or ProductVariant
-          price: parseFloat(item.product.price.toString()), // Example, adapt to your actual data structure
-          imageUrl: item.product.images?.[0]?.url ?? undefined,
-          slug: item.product.slug,
-        }));
-        setSyncedItems(mappedData);
-      }
-    });
+  const getWishlistQuery = api.wishlist.getWishlist.useQuery(undefined, {
+    enabled: sessionStatus === "authenticated",
+    staleTime: 5 * 60 * 1000,
+    onSuccess: (data) => {
+      const mappedData = data.map(item => ({
+        id: item.product.id,
+        variantId: item.variantId, 
+        name: item.product.name,
+        price: parseFloat(item.product.price.toString()), 
+        imageUrl: item.product.images?.[0]?.url ?? undefined,
+        slug: item.product.slug,
+      }));
+      setSyncedItems(mappedData);
+      setIsLoadingInitialDB(false);
+    },
+    onError: () => {
+        setIsLoadingInitialDB(false);
+        toast.error("Could not load wishlist from server.");
+    }
+  });
 
   const addItemMutation = api.wishlist.addToWishlist.useMutation({
-    onSuccess: () => { refetchDbWishlist().catch(console.error); },
+    onSuccess: () => { getWishlistQuery.refetch().catch(console.error); },
     onError: (error) => { toast.error(`Failed to add to wishlist: ${error.message}`); }
   });
   const removeItemMutation = api.wishlist.removeFromWishlist.useMutation({
-    onSuccess: () => { refetchDbWishlist().catch(console.error); },
+    onSuccess: () => { getWishlistQuery.refetch().catch(console.error); },
     onError: (error) => { toast.error(`Failed to remove from wishlist: ${error.message}`); }
   });
   const clearWishlistMutation = api.wishlist.clearWishlist.useMutation({
-    onSuccess: () => { refetchDbWishlist().catch(console.error); },
+    onSuccess: () => { getWishlistQuery.refetch().catch(console.error); },
     onError: (error) => { toast.error(`Failed to clear wishlist: ${error.message}`); }
   });
 
-  // Determine current items based on session status
   const items = useMemo(() => {
     return sessionStatus === "authenticated" ? syncedItems : localItems;
   }, [sessionStatus, localItems, syncedItems]);
 
-  // Effect for initial load and syncing when session status changes
+  // Sync local to DB on login (basic version: add local items not in DB)
   useEffect(() => {
-    setIsLoading(sessionStatus === "loading" || (sessionStatus === "authenticated" && isLoadingDbWishlist));
-    if (sessionStatus === "authenticated" && !isLoadingDbWishlist) {
-      // Optional: Merge local wishlist with DB wishlist on login
-      // This logic can be complex (e.g., if local items are newer or conflict)
-      // For simplicity, current setup prioritizes DB wishlist on login.
-      // If localItems has items not in dbWishlist, you could offer to sync them.
+    if (sessionStatus === "authenticated" && !isLoadingInitialDB && localItems.length > 0) {
+      const dbItemKeys = new Set(syncedItems.map(item => `${item.id}-${item.variantId ?? 'null'}`));
+      const itemsToSync = localItems.filter(localItem => !dbItemKeys.has(`${localItem.id}-${localItem.variantId ?? 'null'}`));
+      
+      if (itemsToSync.length > 0) {
+        Promise.all(itemsToSync.map(item => addItemMutation.mutateAsync({ productId: item.id, variantId: item.variantId })))
+          .then(() => {
+            console.log("Local wishlist items synced to DB.");
+            setLocalItems([]); // Clear local items after successful sync
+          })
+          .catch(error => console.error("Error syncing local wishlist to DB:", error));
+      } else {
+        // If no items to sync from local, but local had items, it means they were already on server or cleared.
+        // If user explicitly cleared local before login, this is fine.
+        // If local was just old, this is also fine.
+      }
     }
-  }, [sessionStatus, isLoadingDbWishlist]);
+  }, [sessionStatus, isLoadingInitialDB, localItems, syncedItems, addItemMutation, setLocalItems]);
+
 
   const addToWishlist = useCallback((item: WishlistItemClient) => {
+    const alreadyExists = items.some(i => i.id === item.id && i.variantId === item.variantId);
+    if (alreadyExists) {
+        toast.info(`${item.name} is already in your wishlist.`);
+        return;
+    }
+
     if (sessionStatus === "authenticated" && session?.user) {
       addItemMutation.mutate({ productId: item.id, variantId: item.variantId });
     } else {
-      setLocalItems(prev => {
-        if (prev.find(i => i.id === item.id && i.variantId === item.variantId)) return prev; // Already exists
-        return [...prev, item];
-      });
+      setLocalItems(prev => [...prev, item]);
     }
     toast.success(`${item.name} added to wishlist!`);
-  }, [sessionStatus, session, addItemMutation, setLocalItems]);
+  }, [sessionStatus, session, addItemMutation, setLocalItems, items]);
 
   const removeFromWishlist = useCallback((productId: string, variantId?: string | null) => {
-    const itemIdentifier = { productId, variantId: variantId ?? undefined };
+    const itemToRemove = items.find(item => item.id === productId && item.variantId === (variantId ?? undefined));
+    
     if (sessionStatus === "authenticated" && session?.user) {
-      removeItemMutation.mutate(itemIdentifier);
+      removeItemMutation.mutate({ productId, variantId: variantId ?? undefined });
     } else {
       setLocalItems(prev => prev.filter(i => !(i.id === productId && i.variantId === (variantId ?? undefined))));
     }
-    // Toast after mutation success or local update
-  }, [sessionStatus, session, removeItemMutation, setLocalItems]);
+    if (itemToRemove) {
+      toast.success(`${itemToRemove.name} removed from wishlist.`);
+    }
+  }, [sessionStatus, session, removeItemMutation, setLocalItems, items]);
 
   const isInWishlist = useCallback((productId: string, variantId?: string | null): boolean => {
     return items.some(item => item.id === productId && item.variantId === (variantId ?? undefined));
@@ -140,7 +158,7 @@ export const WishlistProvider = ({ children }: WishlistProviderProps) => {
     toast.success("Wishlist cleared.");
   }, [sessionStatus, session, clearWishlistMutation, setLocalItems]);
 
-  const itemCount = items.length;
+  const isLoadingOverall = sessionStatus === "loading" || isLoadingInitialDB || addItemMutation.isPending || removeItemMutation.isPending || clearWishlistMutation.isPending;
 
   return (
     <WishlistContext.Provider value={{ 
@@ -149,8 +167,8 @@ export const WishlistProvider = ({ children }: WishlistProviderProps) => {
         removeFromWishlist, 
         isInWishlist, 
         clearWishlist,
-        isLoading: isLoading || addItemMutation.isPending || removeItemMutation.isPending || clearWishlistMutation.isPending,
-        itemCount 
+        isLoading: isLoadingOverall,
+        itemCount: items.length 
     }}>
       {children}
     </WishlistContext.Provider>

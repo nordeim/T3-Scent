@@ -1,0 +1,62 @@
+ ✓ Starting...
+Slow filesystem detected. If /cdrom/project/T3-Scent/claude-3.7/.next is a network drive, consider moving it to a local folder. If you have an antivirus enabled, consider excluding your project directory.
+ ✓ Ready in 1237ms
+ ○ Compiling / ...
+ ✓ Compiled / in 6.4s
+prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."description", "public"."products"."price", "public"."products"."compareAtPrice", "public"."products"."costPrice", "public"."products"."sku", "public"."products"."barcode", "public"."products"."weight", "public"."products"."dimensions", "public"."products"."inStock", "public"."products"."lowStockThreshold", "public"."products"."stockQuantity", "public"."products"."featured", "public"."products"."bestSeller", "public"."products"."isNew", "public"."products"."onSale", "public"."products"."saleEndDate", "public"."products"."publishedAt", "public"."products"."metaTitle", "public"."products"."metaDescription", "public"."products"."modelUrl", "public"."products"."arPlacement", "public"."products"."leadTime", "public"."products"."safetyStock", "public"."products"."turnoverRate", "public"."products"."forecastedDemand", "public"."products"."depletionDate", "public"."products"."createdAt", "public"."products"."updatedAt" FROM "public"."products" WHERE ("public"."products"."publishedAt" IS NOT NULL AND "public"."products"."publishedAt" <= $1 AND "public"."products"."featured" = $2) ORDER BY "public"."products"."createdAt" DESC LIMIT $3 OFFSET $4
+prisma:error 
+Invalid `ctx.db.product.findMany()` invocation in
+/cdrom/project/T3-Scent/claude-3.7/.next/server/chunks/ssr/[root-of-the-server]__da153de8._.js:560:44
+
+  557             createdAt: "desc"
+  558         };
+  559 }
+→ 560 const items = await ctx.db.product.findMany(
+The table `public.products` does not exist in the current database.
+file:///cdrom/project/T3-Scent/claude-3.7/node_modules/.prisma/client/runtime/library.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: TypeError [ERR_INVALID_ARG_TYPE]: The "payload" argument must be of type object. Received null
+file:///cdrom/project/T3-Scent/claude-3.7/node_modules/.prisma/client/runtime/library.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: TypeError [ERR_INVALID_ARG_TYPE]: The "payload" argument must be of type object. Received null
+Error fetching featured products for HomePage: Error [TRPCError]: 
+Invalid `ctx.db.product.findMany()` invocation in
+/cdrom/project/T3-Scent/claude-3.7/.next/server/chunks/ssr/[root-of-the-server]__da153de8._.js:560:44
+
+  557             createdAt: "desc"
+  558         };
+  559 }
+→ 560 const items = await ctx.db.product.findMany(
+The table `public.products` does not exist in the current database.
+    at <unknown> (src/server/api/routers/products.ts:63:41)
+    at async (src/server/api/routers/products.ts:63:20)
+    at async HomePage (src/app/page.tsx:48:27)
+  61 |
+  62 |
+> 63 |       const items = await ctx.db.product.findMany({
+     |                                         ^
+  64 |         take: limit + 1, // Fetch one more to check for next cursor
+  65 |         cursor: cursor ? { id: cursor } : undefined,
+  66 |         orderBy: orderByClause, {
+  code: 'INTERNAL_SERVER_ERROR',
+  [cause]: Error [PrismaClientKnownRequestError]: 
+  Invalid `ctx.db.product.findMany()` invocation in
+  /cdrom/project/T3-Scent/claude-3.7/.next/server/chunks/ssr/[root-of-the-server]__da153de8._.js:560:44
+  
+    557             createdAt: "desc"
+    558         };
+    559 }
+  → 560 const items = await ctx.db.product.findMany(
+  The table `public.products` does not exist in the current database.
+      at <unknown> (src/server/api/routers/products.ts:63:41)
+      at async (src/server/api/routers/products.ts:63:20)
+      at async HomePage (src/app/page.tsx:48:27)
+    61 |
+    62 |
+  > 63 |       const items = await ctx.db.product.findMany({
+       |                                         ^
+    64 |         take: limit + 1, // Fetch one more to check for next cursor
+    65 |         cursor: cursor ? { id: cursor } : undefined,
+    66 |         orderBy: orderByClause, {
+    code: 'P2021',
+    meta: { modelName: 'Product', table: 'public.products' },
+    clientVersion: '6.7.0'
+  }
+}
+

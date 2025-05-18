@@ -1,84 +1,59 @@
 // src/app/layout.tsx
-import "~/styles/globals.css"; // Ensure Tailwind base styles are imported
+import "~/styles/globals.css"; 
 
 import { type ReactNode } from "react";
-import { Inter as FontSans } from "next/font/google"; // Example font, adjust as needed
-import { Analytics } from "@vercel/analytics/react"; // For Vercel Analytics
-import { SpeedInsights } from "@vercel/speed-insights/next" // For Vercel Speed Insights
+import { Inter as FontSans } from "next/font/google"; 
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { headers } from "next/headers"; // Import server-only headers function
 
-
-import { cn } from "~/lib/utils"; // Shadcn utility for class names
-import { Providers } from "./providers"; // Client component to wrap context providers
-import { Navbar } from "~/components/layout/Navbar"; // Assuming Navbar is a server/client component
-import { Footer } from "~/components/layout/Footer"; // Assuming Footer is a server/client component
-import { Toaster } from "~/components/ui/Toaster"; // Assuming react-hot-toast or similar
+import { cn } from "~/lib/utils"; 
+import { Providers } from "./providers"; 
+import { Navbar } from "~/components/layout/Navbar"; 
+import { Footer } from "~/components/layout/Footer"; 
+import { Toaster } from "~/components/ui/Toaster";   
+import { env } from "~/env.js"; 
 
 const fontSans = FontSans({
   subsets: ["latin"],
-  variable: "--font-sans",
+  display: 'swap', 
+  variable: "--font-sans", 
 });
 
-// Root metadata (can be overridden by child pages/layouts)
-export const metadata = {
+export const metadata = { // Using simplified metadata for this example, keep your full one
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: {
     default: "The Scent | Signature Aromatherapy & Wellness",
     template: "%s | The Scent",
   },
-  description: "Discover handcrafted aromatherapy products for wellness and self-care. Explore our collection of essential oils, soaps, and more.",
-  keywords: ["aromatherapy", "wellness", "essential oils", "self-care", "natural products"],
-  icons: [ // Replaces next-seo additionalLinkTags for favicons
-    { rel: "icon", url: "/favicon.ico" },
-    { rel: "apple-touch-icon", url: "/apple-touch-icon.png", sizes: "180x180" },
-  ],
-  manifest: "/site.webmanifest", // PWA manifest
-  // OpenGraph and Twitter metadata can also be defined here or in specific pages
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://the-scent.example.com",
-    siteName: "The Scent",
-    title: "The Scent | Signature Aromatherapy & Wellness",
-    description: "Discover handcrafted aromatherapy products for wellness and self-care.",
-    images: [
-      {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://the-scent.example.com"}/images/og-image.jpg`, // Update with actual OG image path
-        width: 1200,
-        height: 630,
-        alt: "The Scent - Aromatherapy & Wellness",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    // site: "@thescent_handle", // Your Twitter handle
-    // creator: "@creator_handle", // Creator's handle if different
-    title: "The Scent | Signature Aromatherapy & Wellness",
-    description: "Handcrafted aromatherapy products for wellness and self-care.",
-    // images: [`${process.env.NEXT_PUBLIC_SITE_URL}/images/twitter-og.jpg`], // Twitter specific image
-  },
-  // viewport: "width=device-width, initial-scale=1", // Default with Next.js 13+ App Router
-  // themeColor: "#2a7c8a", // Handled by theme provider or CSS
+  description: "Discover handcrafted aromatherapy products for wellness and self-care.",
+  // ... your other metadata fields ...
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const requestHeaders = headers(); // Read headers in Server Component
+
   return (
-    <html lang="en" suppressHydrationWarning> {/* suppressHydrationWarning often needed with next-themes */}
+    <html lang="en" suppressHydrationWarning> 
+      <head /> 
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans text-foreground antialiased",
           fontSans.variable
         )}
       >
-        <Providers> {/* Client component wrapping all context providers */}
-          <div className="relative flex min-h-screen flex-col">
-            <Navbar /> {/* Navbar component */}
-            <main className="flex-1">{children}</main>
-            <Footer /> {/* Footer component */}
+        <Providers requestHeaders={requestHeaders}> {/* Pass headers as a prop */}
+          <div className="relative flex min-h-dvh flex-col"> 
+            <Navbar />
+            <main className="flex-1 pt-16"> 
+              {children}
+            </main>
+            <Footer />
           </div>
-          <Toaster /> {/* For react-hot-toast notifications */}
+          <Toaster /> 
         </Providers>
-        <Analytics /> {/* Vercel Analytics */}
-        <SpeedInsights /> {/* Vercel Speed Insights */}
+        <Analytics /> 
+        <SpeedInsights /> 
       </body>
     </html>
   );
