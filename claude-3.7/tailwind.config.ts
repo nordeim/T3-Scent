@@ -1,29 +1,25 @@
 // tailwind.config.ts
 import { type Config } from "tailwindcss";
-// import { fontFamily } from "tailwindcss/defaultTheme"; // Old
-import defaultTheme from "tailwindcss/defaultTheme"; // New
+// Removed: import defaultTheme from "tailwindcss/defaultTheme"; 
+// We'll define fonts directly or use CSS variables set in globals.css
 
 export default {
   darkMode: "class",
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx}", // Keep if you have any Pages Router structure left (e.g. for some API routes not in app/api)
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    container: {
+    container: { 
       center: true,
-      padding: "1rem",
+      padding: "1rem", 
       screens: {
-        sm: "640px",
-        md: "768px",
-        lg: "1024px",
-        xl: "1280px",
-        "2xl": "1536px",
+        sm: "640px", md: "768px", lg: "1024px", xl: "1180px", "2xl": "1440px", // Adjusted container widths
       },
     },
     extend: {
-      colors: {
+      colors: { // These now reference the CSS variables defined in globals.css
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -32,14 +28,10 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          light: "#4fd1c5",
-          dark: "#1a5b68", 
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
-          light: "#f6ad55",
-          dark: "#c67c3e",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -52,8 +44,6 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          light: "#ff8c69",
-          dark: "#e25c39",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -63,6 +53,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Direct CSS variable usage from sample_landing_page.html if not using HSL for everything:
+        // 'html-bg': 'var(--clr-bg-html)',
+        // 'html-text': 'var(--clr-text-html)',
+        // 'html-primary': 'var(--clr-primary-html)',
+        // 'html-accent': 'var(--clr-accent-html)',
+        // 'html-cta': 'var(--clr-cta-html)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -70,40 +66,29 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans], // Corrected usage
-        // display: ["var(--font-display)", ...defaultTheme.fontFamily.sans],
+        // Reference CSS variables defined in globals.css
+        sans: ["var(--font-body)", "ui-sans-serif", "system-ui"], // Montserrat as primary sans
+        serif: ["var(--font-head)", "ui-serif", "Georgia"],      // Cormorant Garamond as primary serif
+        accent: ["var(--font-accent)", "ui-sans-serif"],          // Raleway as accent font
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
+        "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" }, },
+        "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" }, },
         fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
-        fadeOut: { "0%": { opacity: "1" }, "100%": { opacity: "0" } },
-        slideInRight: { "0%": { transform: "translateX(100%)", opacity: "0" }, "100%": { transform: "translateX(0)", opacity: "1" } },
-        slideInLeft: { "0%": { transform: "translateX(-100%)", opacity: "0" }, "100%": { transform: "translateX(0)", opacity: "1" } },
-        shimmer: {
-          "0%": { backgroundPosition: "-1000px 0" },
-          "100%": { backgroundPosition: "1000px 0" },
-        },
+        // ... other keyframes ...
+        shimmer: { "0%": { backgroundPosition: "-1000px 0" }, "100%": { backgroundPosition: "1000px 0" }, },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         fadeIn: "fadeIn 0.5s ease-in-out",
-        fadeOut: "fadeOut 0.5s ease-in-out",
-        slideInRight: "slideInRight 0.5s ease-in-out",
-        slideInLeft: "slideInLeft 0.5s ease-in-out",
+        // ... other animations ...
         shimmer: "shimmer 2s infinite linear",
       },
     },
   },
   plugins: [
-    require("tailwindcss-animate"),
+    require("tailwindcss-animate"), 
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
   ],

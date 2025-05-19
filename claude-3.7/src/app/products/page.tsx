@@ -18,12 +18,13 @@ interface ProductsPageProps {
   };
 }
 
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  // Access searchParams properties at the beginning
+export default async function ProductsPage({ params, searchParams }: ProductsPageProps) {
+  // Access props at the beginning
   const pageParam = searchParams?.page;
   const sortByParam = searchParams?.sortBy;
   const categoryParam = searchParams?.category;
 
+  const serverApi = await createServerActionClient(); // Then other async operations
   const currentPage = parseInt(pageParam || "1");
   const limit = 12; 
 

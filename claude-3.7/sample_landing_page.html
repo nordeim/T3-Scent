@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Scent — Signature Aromatherapy & Wellness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500&family=Raleway:wght@500;600&display=swap" rel="stylesheet">
+  <!-- Using Font Awesome 6.x -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Tailwind CSS (Using v2 for compatibility with existing styles, consider upgrading later) -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles - Refined and enhanced for WOW effect */
+    :root {
+      /* Refined Color Palette - Light Mode */
+      --clr-bg: #f8f7f4; /* Slightly warmer off-white */
+      --clr-bg-alt: #ffffff; /* Pure white for cards/contrast */
+      --clr-text: #333d41; /* Darker, less blue text */
+      --clr-primary: #2a7c8a; /* Slightly muted teal */
+      --clr-accent: #e0a86f; /* Warmer, slightly richer accent */
+      --clr-soap: #c8dace; /* Softer soap green */
+      --clr-cta: #ff7b4f; /* Existing vibrant CTA */
+      --clr-cta-hover: #ff6a3d; /* Slightly deeper hover */
+      --clr-overlay: rgba(42, 124, 138, 0.06); /* Subtle overlay */
+      --clr-shadow: rgba(60, 35, 16, 0.08); /* Softer shadow */
+
+      /* Refined Color Palette - Dark Mode */
+      --clr-bg-dark: #1a202c; /* Deep cool gray */
+      --clr-bg-alt-dark: #2d3748; /* Mid-dark gray for cards */
+      --clr-text-dark: #e2e8f0; /* Soft off-white */
+      --clr-primary-dark: #4fd1c5; /* Bright teal */
+      --clr-accent-dark: #f6ad55; /* Brighter, warm accent */
+      --clr-soap-dark: #4a5568; /* Muted dark background element */
+      --clr-cta-dark: #ff8c69; /* Brighter CTA for dark bg */
+      --clr-cta-dark-hover: #ff7043; /* Hover for dark CTA */
+      --clr-overlay-dark: rgba(79, 209, 197, 0.1); /* Teal overlay */
+      --clr-shadow-dark: rgba(0, 0, 0, 0.2); /* Darker shadow */
+
+      /* Fonts */
+      --font-head: 'Cormorant Garamond', serif;
+      --font-body: 'Montserrat', sans-serif;
+      --font-accent: 'Raleway', sans-serif;
+
+      /* Transitions & Effects */
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother default transition */
+      --shadow-base: 0 4px 12px 0 var(--clr-shadow);
+      --shadow-lg: 0 10px 30px -5px var(--clr-shadow);
+      --shadow-dark-base: 0 5px 15px 0 var(--clr-shadow-dark);
+      --shadow-dark-lg: 0 12px 35px -5px var(--clr-shadow-dark);
+      --container: 1180px; /* Slightly wider container */
+
+      /* Specific Elements */
+      --mist-light: rgba(255, 255, 255, 0.2);
+      --mist-dark: rgba(200, 235, 255, 0.3);
+      --parallax-blur: 2px;
+    }
+
+    /* Base Body Styles */
+    body {
+      font-family: var(--font-body);
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.7;
+      min-height: 100vh;
+      transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+    body.dark {
+      background: var(--clr-bg-dark);
+      color: var(--clr-text-dark);
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-head);
+      font-weight: 700;
+      color: var(--clr-primary);
+      margin: 0 0 0.75em 0;
+      letter-spacing: .8px; /* Slightly increased spacing */
+      line-height: 1.2;
+    }
+    body.dark h1, body.dark h2, body.dark h3, body.dark h4, body.dark h5, body.dark h6 {
+      color: var(--clr-primary-dark); /* Using primary-dark for headings */
+    }
+
+    /* Links */
+    a {
+      color: var(--clr-primary);
+      text-decoration: none;
+      transition: color var(--transition), opacity var(--transition);
+      outline-offset: 4px;
+    }
+    a:focus-visible { /* More visible focus */
+      outline: 2px solid var(--clr-accent);
+      border-radius: 3px;
+    }
+    a:hover {
+      color: var(--clr-accent);
+      opacity: 0.9;
+    }
+    body.dark a { color: var(--clr-primary-dark); }
+    body.dark a:hover { color: var(--clr-accent-dark); }
+    body.dark a:focus-visible { outline-color: var(--clr-accent-dark); }
+
+
+    /* Container */
+    .container {
+       max-width: var(--container);
+    }
+
+    /* ---------- Nav Styles + Dark/Light Toggle ---------- */
+    nav.navbar {
+      width: 100%; position: fixed; z-index: 1009; top: 0; left: 0;
+      background: rgba(255, 255, 255, 0.85); /* Slightly less transparent */
+      backdrop-filter: blur(10px) saturate(150%); /* Enhanced blur */
+      box-shadow: 0 2px 15px var(--clr-shadow);
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.8rem 0;
+      transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    body.dark nav.navbar {
+      background: rgba(26, 32, 44, 0.9); /* Dark bg */
+      box-shadow: 0 3px 20px var(--clr-shadow-dark);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-container {
+      width: 92%; max-width: var(--container); display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand {
+      font-family: var(--font-head); font-weight: 700; font-size: 2.1rem; /* Slightly larger */
+      color: var(--clr-primary); letter-spacing: 1.5px; display: flex; align-items: center; gap: .6em;
+      transition: color var(--transition);
+    }
+    body.dark .brand { color: var(--clr-primary-dark); }
+    .brand i { font-size: 1.1em; color: var(--clr-accent); transition: transform 0.3s ease-out;} /* Added transition */
+    .brand:hover i { transform: rotate(-15deg); } /* Subtle hover effect */
+    body.dark .brand i { color: var(--clr-accent-dark); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2.5rem; font-family: var(--font-accent);
+    }
+    .nav-links a {
+      font-weight: 500; /* Slightly lighter */ text-transform: uppercase; font-size: 0.95rem; /* Slightly smaller */
+      letter-spacing: 1.2px; color: var(--clr-text); position: relative;
+      display: inline-flex; align-items: center; gap: 0.4em;
+      padding: 0.6em 0; transition: color var(--transition);
+    }
+    body.dark .nav-links a { color: var(--clr-text-dark); }
+    .nav-links a::after {
+      content: ''; position: absolute; left: 50%; bottom: -2px; width: 0; height: 2px;
+      background: var(--clr-accent); border-radius: 2px;
+      transition: width 0.25s ease-out, background-color var(--transition); transform: translateX(-50%);
+    }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--clr-accent); outline: none; }
+    .nav-links a:hover::after, .nav-links a:focus-visible::after { width: 80%; }
+    body.dark .nav-links a:hover, body.dark .nav-links a:focus-visible { color: var(--clr-accent-dark); }
+    body.dark .nav-links a::after { background: var(--clr-accent-dark); }
+
+    /* --- Dark Mode Toggle Button --- */
+    .dark-toggle {
+      background: none; border: none; cursor: pointer; margin-left: 1.5rem;
+      font-size: 1.4rem; /* Slightly larger */
+      color: var(--clr-accent);
+      padding: 0.4em; border-radius: 50%;
+      transition: color var(--transition), transform 0.2s ease-out, background-color 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; /* Explicit size */
+    }
+    .dark-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      background-color: var(--clr-overlay);
+    }
+    .dark-toggle:focus-visible {
+        outline: 2px solid var(--clr-primary);
+        background-color: var(--clr-overlay);
+    }
+    body.dark .dark-toggle {
+      color: var(--clr-accent-dark);
+    }
+     body.dark .dark-toggle:hover {
+      background-color: var(--clr-overlay-dark);
+     }
+    body.dark .dark-toggle:focus-visible {
+        outline-color: var(--clr-primary-dark);
+        background-color: var(--clr-overlay-dark);
+    }
+
+    @media (max-width: 900px) { /* Adjusted breakpoint */
+      nav.navbar { padding: 0.6rem 0; }
+      .nav-container { flex-direction: column; gap: .8em; }
+      .nav-links { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+      .nav-links .dark-toggle { margin-left: 0.5rem; }
+    }
+
+    /* ---------- Ambient Audio Toggle ---------- */
+    .ambient-audio-toggle {
+      position: fixed; top: 80px; /* Position below nav on mobile */ right: 1.5em; z-index: 1010; /* Ensure above nav */
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      box-shadow: 0 3px 15px var(--clr-shadow);
+      transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    body.dark .ambient-audio-toggle {
+      background: rgba(45, 55, 72, 0.7); /* Darker background */
+      box-shadow: 0 4px 18px var(--clr-shadow-dark);
+    }
+    .ambient-audio-toggle button {
+      border-radius: 50%; border: none;
+      padding: 0.7em; background: none;
+      font-size: 1.4rem; /* Matched dark mode toggle */
+      color: var(--clr-accent);
+      transition: color var(--transition), transform 0.2s ease-out, background-color 0.2s;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; /* Explicit size */
+    }
+    .ambient-audio-toggle button:hover {
+        transform: scale(1.1);
+        background-color: var(--clr-overlay);
+    }
+    .ambient-audio-toggle button:focus-visible {
+        outline: 2px solid var(--clr-primary);
+        background-color: var(--clr-overlay);
+        border-radius: 50%; /* ensure focus ring is round */
+    }
+    body.dark .ambient-audio-toggle button { color: var(--clr-accent-dark); }
+    body.dark .ambient-audio-toggle button:hover { background-color: var(--clr-overlay-dark); }
+    body.dark .ambient-audio-toggle button:focus-visible { outline-color: var(--clr-primary-dark); background-color: var(--clr-overlay-dark); }
+
+    @media (min-width: 901px) { /* Place next to dark toggle on desktop */
+      .ambient-audio-toggle { top: auto; bottom: 2em; right: 7em; /* Near shop now button */ }
+      .nav-links { position:relative; } /* Container for absolute positioning if needed later */
+    }
+
+    /* ---------- HERO SECTION ---------- */
+    header.hero {
+      min-height: 100vh; position: relative; width: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      overflow: hidden; isolation: isolate;
+      background: #111518; /* Darker base for video contrast */
+    }
+    .hero-bg-video {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;
+      filter: blur(1px) brightness(0.85) contrast(1.1); /* Adjusted filter */
+      opacity: 0.9; /* Slightly less opacity */
+    }
+    /* Add a subtle gradient overlay */
+    header.hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(26, 32, 44, 0.1), rgba(26, 32, 44, 0.6));
+        z-index: 1;
+        pointer-events: none;
+    }
+    .hero-bg-fallback { display: none; /* Kept for browsers not supporting video */ }
+
+    /* Mist Animation - Enhanced */
+    .mist-trails {
+      pointer-events: none; position: absolute; inset: 0; z-index: 2;
+      mix-blend-mode: screen; /* Screen or Lighten, test for best effect */
+      opacity: 0.8; /* Slightly reduced opacity */
+    }
+    .mist-path {
+      fill: none; stroke: var(--mist-light); stroke-width: 18; /* Thicker */ opacity: .8;
+      stroke-linecap: round; stroke-linejoin: round;
+      filter: blur(1.5px); /* More blur */
+      stroke-dasharray: 4400; stroke-dashoffset: 4400;
+      animation: mistTrail 18s linear infinite alternate; /* Slower, alternate */
+    }
+    .mist-path2 {
+      stroke: var(--mist-light); stroke-width: 12; opacity: 0.65;
+      stroke-dasharray: 4000; stroke-dashoffset: 4000;
+      animation: mistTrail2 25s linear infinite alternate; /* Slower, alternate */
+    }
+    body.dark .mist-path, body.dark .mist-path2 { stroke: var(--mist-dark); }
+    @keyframes mistTrail { /* Adjusted keyframes for smoother alternate */
+      0% { stroke-dashoffset: 4400; opacity: .5; }
+      50% { opacity: .9; }
+      100% { stroke-dashoffset: 0; opacity: .5; }
+    }
+    @keyframes mistTrail2 {
+      0% { stroke-dashoffset: 0; opacity: 0.3; }
+      50% { opacity: .7; }
+      100% { stroke-dashoffset: 4000; opacity: .3; }
+    }
+
+    .hero-content {
+      z-index: 10; max-width: 800px; text-align: center; margin-inline: auto;
+      margin-top: 5vh; /* Adjusted margin */
+      position: relative; padding: 0 1rem; /* Add padding for smaller screens */
+    }
+    .hero-content h1 {
+      font-size: clamp(3rem, 8vw, 5rem); /* Larger range */ color: #fff;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* Enhanced shadow */
+      letter-spacing: 2px; margin-bottom: 0.5em;
+      font-weight: 700;
+    }
+    .hero-content p {
+      color: #eaf2f8; /* Lighter, cooler white */
+      margin: 1.5rem 0 2.5rem 0; /* Adjusted margins */
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem); /* Slightly larger */
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      font-family: var(--font-body); max-width: 650px; margin-inline: auto; /* Limit width */
+      line-height: 1.6;
+    }
+    .hero-content .cta-main {
+      background: var(--clr-cta); color: white;
+      font-family: var(--font-accent); font-weight: 600; /* Adjusted weight */
+      font-size: 1.25rem; padding: 1.2em 2.8em; /* Generous padding */
+      border-radius: 50px; border: none; cursor: pointer;
+      box-shadow: 0 8px 25px -5px rgba(255, 123, 79, 0.4); /* Refined shadow */
+      transition: background 0.25s ease-out, transform 0.2s ease-out, box-shadow 0.25s ease-out;
+      animation: ctaPulse 2.8s infinite alternate cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smoother pulse */
+      display: inline-flex; align-items: center; gap: 1em;
+      letter-spacing: 0.5px;
+    }
+    .hero-content .cta-main i { font-size: 1.2em; transition: transform 0.3s ease-out;}
+    .hero-content .cta-main:hover, .hero-content .cta-main:focus-visible {
+      background: var(--clr-cta-hover); color: white; /* Keep text white */
+      transform: translateY(-4px) scale(1.05); /* Lift and scale */
+      box-shadow: 0 12px 30px -4px rgba(255, 106, 61, 0.5); /* Enhanced hover shadow */
+      outline: none;
+    }
+    .hero-content .cta-main:hover i { transform: translateX(5px); } /* Icon moves on hover */
+
+    @keyframes ctaPulse { /* Adjusted pulse effect */
+      from { box-shadow: 0 8px 25px -5px rgba(255, 123, 79, 0.4); transform: scale(1); }
+      to   { box-shadow: 0 10px 30px 0px rgba(255, 123, 79, 0.5); transform: scale(1.03); }
+    }
+
+    /* --- Floating shop now button --- */
+    .shop-now {
+      position: fixed; bottom: 1.8em; right: 1.8em; z-index: 1091;
+      background: var(--clr-cta); color: #fff; font-size: 1rem; font-weight: 600;
+      border-radius: 50px; padding: 1em 1.8em; /* Adjusted padding */
+      box-shadow: 0 6px 20px -3px rgba(255, 123, 79, 0.5); /* Refined shadow */
+      display: flex; align-items: center; gap: 0.8em;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      border: none; cursor: pointer;
+      animation: shopNowPulse 2s infinite alternate ease-in-out; /* Smoother pulse */
+      font-family: var(--font-accent); letter-spacing: 0.3px;
+    }
+    .shop-now i { font-size: 1.2em; transition: transform 0.3s ease-out;}
+    .shop-now:hover, .shop-now:focus-visible {
+      background: var(--clr-cta-hover); color: white;
+      transform: translateY(-5px) scale(1.08);
+      box-shadow: 0 10px 25px -2px rgba(255, 106, 61, 0.6); /* Enhanced hover shadow */
+      outline: none;
+    }
+     .shop-now:hover i { transform: rotate(-10deg); }
+
+    @keyframes shopNowPulse { /* Simplified pulse */
+      0% { transform: scale(1); box-shadow: 0 6px 20px -3px rgba(255, 123, 79, 0.5); }
+      100% { transform: scale(1.04); box-shadow: 0 8px 25px 0px rgba(255, 123, 79, 0.6); }
+    }
+    body.dark .shop-now { background: var(--clr-cta-dark); box-shadow: 0 6px 20px -3px rgba(255, 140, 105, 0.4); }
+    body.dark .shop-now:hover, body.dark .shop-now:focus-visible { background: var(--clr-cta-dark-hover); box-shadow: 0 10px 25px -2px rgba(255, 112, 67, 0.5); }
+
+    @media (max-width: 615px) {
+      .shop-now { bottom: 1.5em; right: 1.5em; font-size: .9rem; padding: 0.9em 1.5em; }
+      .ambient-audio-toggle { top: 1.2em; right: 1.2em; } /* Adjust audio toggle position on mobile */
+    }
+
+    /* ------- Section base styles -------- */
+    section { padding: 6rem 0; overflow: hidden; /* Prevent horizontal scroll from animations */ }
+    section h2 {
+      font-size: clamp(2.2rem, 5vw, 2.8rem); /* Responsive heading size */
+      color: var(--clr-primary); text-align: center;
+      margin-bottom: 3rem; letter-spacing: 1px;
+    }
+    body.dark section h2 { color: var(--clr-primary-dark); }
+
+    /* ------- About w/Parallax Ingredients -------- */
+    .about-section {
+      background: linear-gradient(120deg, #eef7f7 0%, var(--clr-bg) 100%); /* Softer gradient */
+      position: relative; overflow: hidden;
+    }
+    body.dark .about-section {
+      background: linear-gradient(120deg, #2d3748 0%, var(--clr-bg-dark) 100%); /* Dark gradient */
+    }
+    .about-content-wrap { /* New wrapper for better layout control */
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Default 2 columns */
+        align-items: center; gap: 3rem;
+        max-width: var(--container); margin-inline: auto; padding: 0 1rem;
+    }
+    .about-parallax-img {
+       grid-column: 1 / 2; /* Explicit column */
+       position: relative; perspective: 500px; transform-style: preserve-3d;
+       display: flex; justify-content: center; align-items: center;
+    }
+    .about-parallax-img img {
+      border-radius: 20px; width: 100%; max-width: 450px;
+      box-shadow: var(--shadow-lg);
+      filter: blur(var(--parallax-blur));
+      transition: filter 0.4s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Enhanced transition */
+      will-change: transform, filter;
+      pointer-events: none;
+    }
+    body.dark .about-parallax-img img {
+      box-shadow: var(--shadow-dark-lg);
+    }
+    .about-parallax-text {
+      grid-column: 2 / 3; /* Explicit column */
+      position: relative; z-index: 7; padding: 1rem 0; /* Adjusted padding */
+    }
+    .about-parallax-text h2 { text-align: left; margin-bottom: 1em; font-size: clamp(2rem, 4.5vw, 2.6rem); }
+    .about-parallax-text p {
+      font-size: clamp(1rem, 1.8vw, 1.1rem); margin-bottom: 1.5rem;
+      color: var(--clr-text); max-width: 500px; /* Limit text width */
+      line-height: 1.8;
+    }
+    body.dark .about-parallax-text p { color: var(--clr-text-dark); }
+    .about-icons {
+      display: flex; gap: 2.5em; margin-top: 1.5em; /* Increased spacing */
+      font-size: 1.1rem; align-items: center;
+    }
+    .about-icons span { /* Wrapper for icon + text */
+      display: flex; align-items: center; gap: 0.5em;
+      color: var(--clr-primary);
+      transition: color var(--transition);
+    }
+     .about-icons span i {
+       font-size: 1.8em; /* Larger icons */
+       color: var(--clr-accent);
+       transition: color var(--transition), transform 0.3s ease-out;
+     }
+     .about-icons span span { /* Just the text */
+        font-family: var(--font-accent); font-size: 0.95em;
+        letter-spacing: 0.5px; opacity: 0.9;
+     }
+    .about-icons span:hover i { transform: scale(1.1); color: var(--clr-primary); }
+    .about-icons span:hover { color: var(--clr-accent); }
+
+    body.dark .about-icons span { color: var(--clr-primary-dark); }
+    body.dark .about-icons span i { color: var(--clr-accent-dark); }
+    body.dark .about-icons span:hover i { color: var(--clr-primary-dark); }
+    body.dark .about-icons span:hover { color: var(--clr-accent-dark); }
+
+    @media (pointer: fine) { /* Apply parallax only on devices with fine pointer */
+      .about-parallax-img.scrolled img {
+        filter: blur(0.3px) saturate(1.05) contrast(1.05); /* Subtle enhancement */
+        /* Transform controlled by JS for smooth scroll effect */
+      }
+    }
+    @media (max-width: 900px) {
+      .about-content-wrap { grid-template-columns: 1fr; gap: 2rem; } /* Stack columns */
+      .about-parallax-img { grid-row: 1 / 2; } /* Image first */
+      .about-parallax-text { grid-row: 2 / 3; text-align: center; } /* Text second */
+      .about-parallax-text h2 { text-align: center; }
+      .about-parallax-text p { margin-inline: auto; } /* Center paragraph */
+      .about-icons { justify-content: center; }
+      .about-parallax-img img { max-width: 350px; }
+    }
+    @media (max-width: 480px) {
+      .about-parallax-img img { max-width: 90vw; }
+    }
+
+    /* Ingredients Map */
+    .ingredient-map-wrap { margin: 4rem auto 0 auto; max-width: 700px; text-align: center; }
+    .ingredient-map-title {
+      text-align: center; color: var(--clr-primary);
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem); margin-bottom: 1.5rem;
+      font-family: var(--font-accent); font-weight: 600; opacity: 0.9;
+    }
+    body.dark .ingredient-map-title { color: var(--clr-primary-dark); }
+    .ingredient-map {
+      position: relative; width: 100%; max-width: 600px; height: auto;
+      margin: 1.5rem auto 0 auto;
+      border-radius: 15px; box-shadow: var(--shadow-base);
+      overflow: hidden; /* Hide marker overflow */
+    }
+    body.dark .ingredient-map { box-shadow: var(--shadow-dark-base); }
+    .ingredient-map img { width: 100%; display: block; border-radius: 15px; opacity: 0.9; }
+    body.dark .ingredient-map img { opacity: 0.8; }
+
+    .ingredient-marker {
+      position: absolute; width: 30px; height: 30px; /* Slightly larger */
+      left: 0; top: 0; transform: translate(-50%, -50%); /* Center on point */
+      cursor: pointer; z-index: 10;
+      border-radius: 50%;
+      transition: transform 0.3s ease-out;
+    }
+     .ingredient-marker:hover { transform: translate(-50%, -50%) scale(1.2); }
+
+    .ingredient-marker .marker-pulse {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 12px; height: 12px; /* Smaller inner dot */
+      background: var(--clr-accent); border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(224, 168, 111, 0.7); /* Initial shadow for animation */
+      animation: markerPulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1); /* Smoother pulse */
+    }
+    body.dark .ingredient-marker .marker-pulse {
+        background: var(--clr-accent-dark);
+        box-shadow: 0 0 0 0 rgba(246, 173, 85, 0.7);
+    }
+
+    @keyframes markerPulse {
+      to { box-shadow: 0 0 0 15px rgba(224, 168, 111, 0); } /* Pulse outwards */
+    }
+    body.dark @keyframes markerPulse {
+      to { box-shadow: 0 0 0 15px rgba(246, 173, 85, 0); }
+    }
+
+    .ingredient-marker .marker-label {
+      pointer-events: none; opacity: 0; visibility: hidden; /* Use visibility for better performance */
+      min-width: 90px; white-space: nowrap;
+      background: rgba(45, 55, 72, 0.95); /* Darker background */
+      color: #fff; font-size: .9rem; /* Slightly smaller */
+      padding: 6px 14px; border-radius: 8px;
+      position: absolute; left: 100%; top: 50%; /* Position to the right */
+      transform: translate(10px, -50%); /* Offset from marker */
+      font-family: var(--font-accent); font-weight: 500;
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s ease-out;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+     .ingredient-marker .marker-label small { font-size: 0.8em; opacity: 0.8; display: block; margin-top: 2px;}
+
+    .ingredient-marker:hover .marker-label,
+    .ingredient-marker:focus-visible .marker-label {
+      opacity: 1; visibility: visible;
+      transform: translate(15px, -50%); /* Move slightly further on hover/focus */
+    }
+     /* Adjust label position for markers on the right side */
+    .ingredient-marker[style*="left:76.5%"] .marker-label {
+        left: auto; right: 100%;
+        transform: translate(-10px, -50%);
+    }
+    .ingredient-marker[style*="left:76.5%"]:hover .marker-label,
+    .ingredient-marker[style*="left:76.5%"]:focus-visible .marker-label {
+        transform: translate(-15px, -50%);
+    }
+
+    /* ------- Products Grid -------- */
+    .products-section {
+      background: var(--clr-bg-alt); /* Use pure white */
+      box-shadow: 0 -5px 30px -10px var(--clr-shadow), 0 5px 30px -10px var(--clr-shadow); /* Top and bottom shadow */
+    }
+    body.dark .products-section {
+      background: var(--clr-bg-alt-dark); /* Use mid-dark */
+      box-shadow: 0 -5px 30px -10px var(--clr-shadow-dark), 0 5px 30px -10px var(--clr-shadow-dark);
+    }
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Slightly larger minmax */
+      gap: 2.5rem; /* Increased gap */
+      margin-top: 3.5rem;
+    }
+    .product-card {
+      background: var(--clr-bg); /* Use main bg for cards */
+      border-radius: 18px; /* More rounded */
+      box-shadow: var(--shadow-base);
+      transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+      overflow: hidden; cursor: pointer; position: relative;
+      display: flex; flex-direction: column;
+      border: 2px solid transparent; /* For hover effect */
+    }
+    .product-card:hover, .product-card:focus-within { /* focus-within for keyboard nav */
+      transform: translateY(-10px); /* More lift */
+      box-shadow: var(--shadow-lg);
+      border-color: var(--clr-accent);
+      outline: none;
+    }
+    body.dark .product-card {
+      background: #252e3d; /* Custom dark card bg */
+      box-shadow: var(--shadow-dark-base);
+      border-color: transparent;
+    }
+    body.dark .product-card:hover, body.dark .product-card:focus-within {
+       box-shadow: var(--shadow-dark-lg);
+       border-color: var(--clr-accent-dark);
+    }
+
+    .product-card img {
+      width: 100%; height: 240px; /* Increased height */ object-fit: cover;
+      /* Removed top radius to merge with card */
+      transition: opacity 0.3s ease-out, transform 0.4s ease-out; /* Added transform */
+      opacity: 0.95; /* Slightly less opaque */
+    }
+    .product-card:hover img, .product-card:focus-within img {
+      opacity: 1;
+      transform: scale(1.03); /* Subtle zoom on hover */
+    }
+    .product-info {
+      padding: 1.5em 1.4em; text-align: center; flex-grow: 1; /* Ensure it grows */
+      display: flex; flex-direction: column; justify-content: space-between; /* Space out content */ align-items: center;
+    }
+    .product-info h3 {
+      font-family: var(--font-head); font-size: 1.35rem; /* Larger heading */
+      margin-bottom: 0.5em; color: var(--clr-primary);
+      font-weight: 700;
+    }
+    body.dark .product-info h3 { color: var(--clr-primary-dark); }
+    .product-info p {
+      font-size: 0.95rem; color: var(--clr-text); opacity: 0.85; /* Slightly lighter text */
+      margin-bottom: 1.2em; /* More space before link */
+    }
+    body.dark .product-info p { color: var(--clr-text-dark); opacity: 0.8; }
+
+    .product-info .product-link {
+      display: inline-flex; align-items: center; gap: 0.6em;
+      margin-top: auto; /* Push to bottom */
+      color: var(--clr-cta);
+      font-family: var(--font-accent); font-weight: 600;
+      text-transform: uppercase; font-size: 0.9rem; /* Smaller link text */
+      transition: color var(--transition), border-color var(--transition);
+      border-bottom: 2px solid transparent; padding-bottom: 3px; letter-spacing: 0.5px;
+    }
+    .product-card:hover .product-link, .product-card:focus-within .product-link, .product-link:focus-visible {
+      color: var(--clr-accent); border-bottom-color: var(--clr-accent);
+      outline: none;
+    }
+    body.dark .product-info .product-link { color: var(--clr-cta-dark); }
+    body.dark .product-card:hover .product-link, body.dark .product-card:focus-within .product-link, body.dark .product-link:focus-visible {
+      color: var(--clr-accent-dark); border-bottom-color: var(--clr-accent-dark);
+    }
+    .product-link i { transition: transform 0.25s ease-out; }
+    .product-card:hover .product-link i, .product-card:focus-within .product-link i {
+        transform: translateX(4px);
+    }
+
+    /* -------- Scent Quiz (multi-step animated) -------- */
+    .finder-section {
+      background: linear-gradient(110deg, #eaf7f2 0%, #fcf9f4 100%); /* Softer gradient */
+    }
+    body.dark .finder-section {
+      background: linear-gradient(110deg, #2c384b 0%, #1f2738 100%); /* Dark gradient */
+    }
+    .quiz-wrap {
+      max-width: 680px; margin: 0 auto; padding: 2.5em 2.5em; /* Adjusted padding */
+      box-shadow: var(--shadow-lg); border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9); /* Slightly more opaque */
+      backdrop-filter: blur(5px);
+      transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    body.dark .quiz-wrap {
+       background: rgba(45, 55, 72, 0.95); /* Darker quiz bg */
+       box-shadow: var(--shadow-dark-lg);
+    }
+    .quiz-headline {
+      text-align: center; font-size: clamp(1.8rem, 4vw, 2.2rem);
+      margin-bottom: 1.5rem; color: var(--clr-primary); font-family: var(--font-head);
+    }
+    body.dark .quiz-headline { color: var(--clr-primary-dark); }
+
+    .multi-quiz { margin-top: 1.8em; position: relative; } /* Relative for potential absolute positioning inside */
+    .quiz-step {
+      display: none; min-height: 160px; /* Increased min-height */
+      animation: fadeInStep 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Custom animation */
+    }
+    .quiz-step.active { display: block; }
+
+    @keyframes fadeInStep {
+      from { opacity: 0; transform: translateY(15px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .quiz-q {
+      font-family: var(--font-head); font-size: 1.4rem; /* Larger question text */
+      margin-bottom: 1.5em; color: var(--clr-text); text-align: center; /* Center question */
+      font-weight: 600;
+    }
+    .quiz-q i { margin-right: 0.4em; color: var(--clr-accent); } /* Style icon */
+    body.dark .quiz-q { color: var(--clr-text-dark); }
+    body.dark .quiz-q i { color: var(--clr-accent-dark); }
+
+    /* *** FIX: Quiz options grid layout *** */
+    .quiz-options {
+      display: grid; /* Use grid */
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Responsive columns */
+      gap: 1rem; /* Grid gap */
+      justify-items: center; /* Center items horizontally */
+      margin-bottom: 2em;
+    }
+
+    .quiz-opt {
+      background: var(--clr-accent); color: white; /* White text for better contrast */
+      border: none; border-radius: 30px; font-family: var(--font-accent);
+      font-size: 1rem; font-weight: 600;
+      padding: 0.9em 1.8em; /* Adjusted padding */
+      box-shadow: 0 3px 10px rgba(224, 168, 111, 0.3);
+      cursor: pointer;
+      transition: background var(--transition), transform 0.2s ease-out, box-shadow var(--transition);
+      display: flex; align-items: center; justify-content: center; /* Center content */ gap: .6em;
+      width: 100%; /* Make buttons fill grid cells */
+      text-align: center; /* Center text */
+    }
+     .quiz-opt i { opacity: 0.9; }
+
+    .quiz-opt:hover, .quiz-opt:focus-visible {
+      background: var(--clr-cta); /* Use CTA color for hover */
+      color: white;
+      transform: translateY(-3px) scale(1.03); /* Lift and scale */
+      box-shadow: 0 6px 15px rgba(255, 123, 79, 0.4);
+      outline: none;
+    }
+    body.dark .quiz-opt {
+        background: var(--clr-accent-dark); color: var(--clr-bg-dark); /* Dark text on light accent */
+        box-shadow: 0 3px 10px rgba(246, 173, 85, 0.2);
+    }
+    body.dark .quiz-opt:hover, body.dark .quiz-opt:focus-visible {
+        background: var(--clr-cta-dark); color: white;
+        box-shadow: 0 6px 15px rgba(255, 140, 105, 0.3);
+    }
+
+    .quiz-progress {
+      text-align: center; font-size: 0.95rem; color: var(--clr-primary);
+      opacity: .8; margin-bottom: 1em; font-family: var(--font-accent);
+    }
+    body.dark .quiz-progress { color: var(--clr-primary-dark); }
+
+    .quiz-result {
+      display: none; text-align: center; padding: 1.5em 0;
+      animation: fadeInStep .7s; min-height: 200px;
+    }
+    .quiz-result h4 {
+        font-size: 1.5rem; color: var(--clr-accent); margin-bottom: 1em;
+        font-family: var(--font-head); font-weight: 700;
+    }
+    body.dark .quiz-result h4 { color: var(--clr-accent-dark); }
+    .quiz-result .products-grid {
+        margin-top: 1.8em;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller cards in results */
+        gap: 1.5rem;
+        max-width: 500px; margin-inline: auto; /* Center results grid */
+    }
+    .quiz-result .product-card { /* Slightly smaller result cards */
+        border-radius: 15px;
+    }
+    .quiz-result .product-card img { height: 180px; }
+    .quiz-result .product-info { padding: 1.2em 1em; }
+    .quiz-result .product-info h3 { font-size: 1.15rem; }
+    .quiz-result .product-info p { font-size: 0.85rem; margin-bottom: 1em;}
+    .quiz-result .product-link { font-size: 0.8rem;}
+    .quiz-result .cta-main { /* Style the 'Shop All' button */
+        margin-top: 2.5em;
+        font-size: 1.1rem; padding: 0.9em 2em;
+    }
+     body.dark .quiz-result .cta-main { background: var(--clr-cta-dark); }
+     body.dark .quiz-result .cta-main:hover { background: var(--clr-cta-dark-hover); }
+
+
+    /* --------- Testimonials --------- */
+    .testimonials-section {
+      background: var(--clr-bg); /* Use base background */ position: relative;
+    }
+    body.dark .testimonials-section { background: var(--clr-bg-dark); }
+    .testi-headline { /* Use standard h2 style, maybe customize slightly */
+      font-size: clamp(2rem, 4.5vw, 2.6rem); color: var(--clr-primary); margin-bottom: 3rem;
+    }
+    body.dark .testi-headline { color: var(--clr-primary-dark); }
+
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;
+      padding-bottom: 1.5em;
+    }
+    .testimonial {
+      background: var(--clr-bg-alt);
+      border-radius: 18px; box-shadow: var(--shadow-base);
+      padding: 2.2em 1.8em; /* Adjusted padding */
+      text-align: left;
+      opacity: 0; transform: translateY(30px) scale(0.98); /* Start further down and slightly smaller */
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out; /* Smoother transition */
+      border-left: 5px solid var(--clr-accent); /* Accent border */
+    }
+    .testimonial.visible {
+      opacity: 1; transform: translateY(0) scale(1);
+    }
+    body.dark .testimonial {
+      background: var(--clr-bg-alt-dark); color: var(--clr-text-dark);
+      box-shadow: var(--shadow-dark-base);
+      border-left-color: var(--clr-accent-dark);
+    }
+    .testimonial p {
+      font-style: italic; color: var(--clr-text); opacity: 0.9;
+      margin-bottom: 1.5em; font-size: 1.05rem; line-height: 1.7;
+      position: relative; padding-left: 2.5em; /* Space for quote icon */
+    }
+     .testimonial p::before { /* Quote icon */
+        content: "\f10d"; /* Font Awesome quote-left */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute; left: 0; top: -0.1em;
+        font-size: 1.8em; color: var(--clr-primary); opacity: 0.2;
+        line-height: 1;
+     }
+    body.dark .testimonial p { color: var(--clr-text-dark); }
+    body.dark .testimonial p::before { color: var(--clr-primary-dark); }
+
+    .testimonial .testi-author {
+        font-weight: 700; color: var(--clr-primary);
+        display: flex; align-items: center; gap: 0.5em; font-size: 0.95rem;
+    }
+    .testimonial .testi-author i { color: var(--clr-accent); font-size: 1.1em; }
+    body.dark .testimonial .testi-author { color: var(--clr-primary-dark); }
+    body.dark .testimonial .testi-author i { color: var(--clr-accent-dark); }
+
+    .testimonial .testi-stars {
+        color: var(--clr-accent); letter-spacing: 2px; font-size: 1rem; /* Slightly smaller stars */
+        margin-top: 0.5em; display: block; /* Ensure it's block */
+    }
+    body.dark .testimonial .testi-stars { color: var(--clr-accent-dark); }
+
+    /* --------- Newsletter ---------- */
+    .newsletter-section {
+      background: var(--clr-primary); color: #fff;
+      text-align: center; padding: 5rem 0; /* Increased padding */
+      position: relative; overflow: hidden;
+    }
+    /* Add subtle background pattern */
+    .newsletter-section::before {
+        content: ''; position: absolute; inset: 0;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 15px 15px;
+        opacity: 0.5; z-index: 0;
+    }
+    body.dark .newsletter-section {
+      background: var(--clr-accent-dark); /* Use accent for dark newsletter */
+      color: var(--clr-bg-dark); /* Dark text on accent bg */
+    }
+    body.dark .newsletter-section::before {
+        background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+    }
+
+    .newsletter-content { position: relative; z-index: 1; } /* Content above pattern */
+    .newsletter-section h2 {
+      color: #fff; font-size: clamp(2rem, 5vw, 2.6rem); margin-bottom: 0.5em;
+    }
+    body.dark .newsletter-section h2 { color: var(--clr-bg-dark); }
+    .newsletter-section p {
+      color: rgba(255, 255, 255, 0.85); margin-bottom: 2.5em;
+      max-width: 550px; margin-inline: auto; font-size: 1.05rem;
+    }
+    body.dark .newsletter-section p { color: rgba(26, 32, 44, 0.85); }
+
+    .newsletter-form {
+      margin: 2em 0 0 0; display: flex; justify-content: center; align-items: center; gap: 1em; flex-wrap: wrap;
+      max-width: 650px; margin-inline: auto;
+    }
+    .newsletter-form input[type="email"] {
+      font-size: 1rem; font-family: var(--font-body); padding: 1.1em 1.5em;
+      border-radius: 50px; border: none;
+      background: rgba(255, 255, 255, 0.9); color: var(--clr-primary); min-width: 250px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: box-shadow var(--transition), background var(--transition);
+      flex-grow: 1; /* Allow input to grow */
+      border: 2px solid transparent;
+    }
+     .newsletter-form input[type="email"]::placeholder { color: rgba(42, 124, 138, 0.6); }
+     .newsletter-form input[type="email"]:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--clr-accent);
+        background: white;
+        border-color: var(--clr-accent);
+     }
+     body.dark .newsletter-form input[type="email"] {
+        background: rgba(26, 32, 44, 0.8); color: var(--clr-accent-dark);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+     }
+      body.dark .newsletter-form input[type="email"]::placeholder { color: rgba(246, 173, 85, 0.6); }
+      body.dark .newsletter-form input[type="email"]:focus-visible {
+         box-shadow: 0 0 0 3px var(--clr-primary-dark);
+         background: var(--clr-bg-dark);
+         border-color: var(--clr-primary-dark);
+      }
+
+
+    .newsletter-form button {
+      background: var(--clr-cta); color: #fff; font-family: var(--font-accent);
+      font-weight: 600; font-size: 1rem; letter-spacing: 0.5px;
+      border-radius: 50px; border: none; cursor: pointer; padding: 1.1em 2.5em; /* Match input height */
+      transition: background var(--transition), transform 0.2s ease-out, box-shadow var(--transition);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      white-space: nowrap; /* Prevent wrapping */
+    }
+    .newsletter-form button:hover, .newsletter-form button:focus-visible {
+      background: var(--clr-cta-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+      outline: none;
+    }
+    body.dark .newsletter-form button {
+        background: var(--clr-primary); /* Use primary color for button */
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    body.dark .newsletter-form button:hover, body.dark .newsletter-form button:focus-visible {
+        background: #2a6e78; /* Darker primary hover */
+         transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .newsletter-section small {
+        display: block; margin-top: 1.5em;
+        color: rgba(255, 255, 255, 0.7); font-size: 0.85rem;
+    }
+    body.dark .newsletter-section small { color: rgba(26, 32, 44, 0.7); }
+
+    /* --- Section separators (Curves) -- */
+    .curve-separator {
+      position: relative; height: 80px; /* Increased height for more dramatic curves */
+      margin-top: -40px; /* Adjust overlap */
+      background: none; pointer-events: none; z-index: 5; /* Ensure above lower section */
+      overflow: hidden;
+    }
+    .curve-separator svg { display: block; width: 100%; height: 100%; }
+    .curve-separator path {
+        fill: var(--clr-bg); /* Default fill matching the section BELOW the curve */
+        transition: fill 0.5s ease-in-out;
+    }
+    /* Specific curve fills - Match the background of the section the curve leads INTO */
+    #about + .curve-separator path { fill: var(--clr-bg-alt); } /* Curve before Products */
+    #products + .curve-separator path { fill: #eaf7f2; } /* Curve before Finder (using gradient start color) */
+    #finder + .curve-separator path { fill: var(--clr-bg); } /* Curve before Testimonials */
+    #testimonials + .curve-separator path { fill: var(--clr-primary); } /* Curve before Newsletter */
+
+    body.dark .curve-separator path { fill: var(--clr-bg-dark); }
+    body.dark #about + .curve-separator path { fill: var(--clr-bg-alt-dark); }
+    body.dark #products + .curve-separator path { fill: #2c384b; }
+    body.dark #finder + .curve-separator path { fill: var(--clr-bg-dark); }
+    body.dark #testimonials + .curve-separator path { fill: var(--clr-accent-dark); }
+
+
+    /* --- Footer --- */
+    footer {
+      background: #1f2427; /* Slightly different dark */
+      color: #bdc8d3; /* Softer text color */
+      padding: 4em 0 0 0; /* More top padding */
+      font-family: var(--font-body); font-size: 0.95rem;
+    }
+    .footer-main {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2.5em; padding-bottom: 3em;
+      max-width: var(--container); margin: auto; padding-inline: 1rem;
+    }
+    .footer-main h3 {
+      font-family: var(--font-accent); font-size: 1.2rem; /* Larger footer headings */
+      color: var(--clr-accent-dark); /* Use dark accent for footer headings */
+      margin-bottom: 1em; font-weight: 600; letter-spacing: 0.5px;
+    }
+    .footer-about p { margin-bottom: 1em; font-size: 0.98em; line-height: 1.7; opacity: 0.85; }
+    .footer-social { margin-top: 1em; display: flex; gap: 1em; }
+    .footer-social a {
+      color: #e2e8f0; font-size: 1.3rem;
+      transition: color var(--transition), transform 0.2s ease-out;
+    }
+    .footer-social a:hover, .footer-social a:focus-visible {
+      color: var(--clr-accent-dark); transform: scale(1.15); outline: none;
+    }
+    .footer-links ul { list-style: none; padding-left: 0; margin: 0; }
+    .footer-links li { margin-bottom: .6em; }
+    .footer-links a {
+      color: #bdc8d3; font-size: 1em; opacity: 0.9;
+      transition: color var(--transition), padding-left 0.2s ease-out;
+      position: relative;
+    }
+    .footer-links a:hover, .footer-links a:focus-visible {
+      color: var(--clr-accent-dark); padding-left: 8px; outline: none;
+    }
+     .footer-links a:hover::before { /* Add subtle indicator on hover */
+        content: '>'; position: absolute; left: 0; top: 0;
+        font-weight: bold; color: var(--clr-accent-dark);
+     }
+
+    .footer-contact p { margin-bottom: .8em; display: flex; align-items: flex-start; gap: 0.7em; opacity: 0.9;}
+    .footer-contact i { color: var(--clr-accent-dark); margin-right: 0; font-size: 1.1em; margin-top: 0.2em;}
+
+    .footer-bottom {
+      background: #15191b; /* Even darker bottom bar */
+      padding: 1.5em 0; text-align: center; margin-top: 2em; font-size: .9rem;
+      color: rgba(255, 255, 255, 0.7); border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-bottom .payment-methods { margin-top: .8em; }
+    .footer-bottom i { font-size: 1.6em; color: #88929b; margin: 0 .4em; transition: color var(--transition); }
+    .footer-bottom i:hover { color: #fff; }
+
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 1000px) {
+       .footer-main { gap: 2em; }
+    }
+    @media (max-width: 768px) {
+      /* Navbar already handled */
+      .about-content-wrap { gap: 1.5rem; }
+      .products-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.8rem; }
+      .testimonials-grid { grid-template-columns: 1fr; gap: 2rem; }
+      section { padding: 4.5rem 0; }
+      .curve-separator { height: 60px; margin-top: -30px; }
+    }
+    @media (max-width: 545px) {
+      header.hero .hero-content h1 { font-size: 2.5rem; }
+      header.hero .hero-content p { font-size: 1.1rem; }
+      .nav-links { gap: 0.5rem 1rem; /* Row and column gap */ }
+      section { padding: 3.5rem 0; }
+      section h2 { font-size: 2rem; margin-bottom: 2rem; }
+      .curve-separator { height: 45px; margin-top: -22px; }
+      .products-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .quiz-wrap { padding: 2em 1em; }
+      .quiz-options { grid-template-columns: 1fr 1fr; gap: 0.8rem;} /* 2 columns on mobile quiz */
+      .footer-main { grid-template-columns: 1fr; text-align: center; }
+      .footer-about p, .footer-contact p { max-width: 350px; margin-inline: auto; }
+      .footer-social, .footer-contact { justify-content: center; }
+      .footer-links ul { text-align: center; }
+    }
+
+    /* -- Reduce motion support -- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+       .mist-path, .mist-path2, .marker-pulse, .shop-now, .hero-content .cta-main { animation: none !important; }
+       .about-parallax-img img { transition: none !important; }
+       .product-card, .testimonial { transition: none !important; }
+    }
+
+  </style>
+</head>
+<body class=""> <!-- Add 'dark' class here manually to test dark mode -->
+
+  <!-- Ambient Audio Toggle - Now using FA icons -->
+  <div class="ambient-audio-toggle" title="Toggle Ambient Sound" role="region" aria-label="Toggle ambient sound">
+    <audio id="scentAudio" loop src="https://cdn.pixabay.com/audio/2022/10/16/audio_12bac8f711.mp3"></audio>
+    <!-- Button content (icon) will be controlled by JS -->
+    <button id="audioBtn" aria-label="Toggle ambient scent sound">
+      <i class="fa-solid fa-volume-xmark"></i> <!-- Start muted -->
+    </button>
+  </div>
+
+  <nav class="navbar" aria-label="Main Navigation">
+    <div class="nav-container container mx-auto px-4">
+      <a href="#hero" class="brand"><i class="fa-solid fa-feather-pointed"></i> The Scent</a>
+      <div class="nav-links">
+        <a href="#hero"><i class="fa-solid fa-house-chimney-window fa-fw"></i> Home</a>
+        <a href="#about"><i class="fa-solid fa-seedling fa-fw"></i> About</a>
+        <a href="#products"><i class="fa-solid fa-cart-shopping fa-fw"></i> Shop</a>
+        <a href="#finder"><i class="fa-solid fa-flask-vial fa-fw"></i> Quiz</a>
+        <a href="#testimonials"><i class="fa-solid fa-comments fa-fw"></i> Reviews</a>
+        <a href="#contact"><i class="fa-solid fa-envelope fa-fw"></i> Contact</a>
+        <!-- Dark Mode Toggle Button -->
+        <button class="dark-toggle" id="darkToggle" aria-label="Toggle light/dark mode">
+          <i class="fa-solid fa-moon"></i> <!-- Initial icon (moon for light mode) -->
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="hero">
+    <video class="hero-bg-video" autoplay muted loop playsinline poster="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/scent5.jpg">
+      <source src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/videos/aroma.mp4" type="video/mp4">
+      <!-- Fallback image is styled via CSS -->
+      <img class="hero-bg-fallback" src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/scent5.jpg" alt="Calm Aroma Visual">
+    </video>
+    <div class="mist-trails" aria-hidden="true">
+       <svg width="100%" height="100%" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <path class="mist-path" d="M-100,550 Q250,400 550,580 T900,420 Q1150,250 1500,400" />
+         <path class="mist-path2" d="M-100,680 Q400,620 800,650 T1500,600" />
+       </svg>
+    </div>
+    <div class="hero-content">
+      <h1>Crafted Aromas, Pure Well-being</h1>
+      <p>Experience the essence of nature with our handcrafted aromatherapy blends, sourced globally and formulated with passion.</p>
+      <a href="#products" class="cta-main" role="button"><i class="fa-solid fa-bag-shopping"></i> Explore Collections</a>
+    </div>
+  </header>
+
+  <!-- Floating Shop Now Button -->
+  <a href="#products" class="shop-now" aria-label="Shop Now"><i class="fa-solid fa-store"></i> Shop Now</a>
+
+  <!-- Curve Separator 1: Hero -> About -->
+  <div class="curve-separator" aria-hidden="true">
+    <svg viewBox="0 0 1440 80"><path d="M0,32c128,32,320,-12,580,0c260,12,368,44,544,28c100,-10,178,-16,316,-20v40H0Z"></path></svg>
+  </div>
+
+  <section id="about" class="about-section">
+    <div class="container mx-auto px-4">
+      <div class="about-content-wrap">
+        <div class="about-parallax-img" id="aboutParallaxImgContainer">
+          <img src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/scent4.jpg" loading="lazy" alt="Botanical Aromatic Ingredients with mortar and pestle" id="aboutParallaxImg">
+        </div>
+        <div class="about-parallax-text">
+          <h2>Nature's Wisdom, Bottled with Care</h2>
+          <p>
+            At <b>The Scent</b>, we believe in the restorative power of nature. We meticulously source the world's finest botanicals, blending ancient wisdom with modern expertise to create harmonious aromatherapy oils and soaps that nurture your mind, body, and spirit.
+          </p>
+          <div class="about-icons">
+            <span><i class="fa-solid fa-earth-americas"></i> <span>Globally Sourced</span></span>
+            <span><i class="fa-solid fa-recycle"></i> <span>Eco-Conscious</span></span>
+            <span><i class="fa-solid fa-vial-circle-check"></i> <span>Expert Formulated</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="ingredient-map-wrap">
+        <div class="ingredient-map-title">Discover the Origins of Our Signature Scents</div>
+        <div class="ingredient-map">
+          <img src="https://raw.githubusercontent.com/nordeim/The-Scent-ideas/refs/heads/main/images/BlankMap-World-noborders.jpg" loading="lazy" alt="World Map showing ingredient origins" />
+          <!-- Markers positioned using inline styles for simplicity here -->
+          <div class="ingredient-marker" tabindex="0" aria-label="Ingredient from France: Lavender" style="left:43%;top:45%;">
+            <div class="marker-pulse"></div>
+            <span class="marker-label">Lavender<small>France</small></span>
+          </div>
+          <div class="ingredient-marker" tabindex="0" aria-label="Ingredient from Japan: Cedarwood" style="left:76.5%;top:50%;">
+            <div class="marker-pulse"></div>
+            <span class="marker-label">Cedarwood<small>Japan</small></span>
+          </div>
+          <div class="ingredient-marker" tabindex="0" aria-label="Ingredient from Mediterranean: Rosemary" style="left:48%;top:55%;">
+            <div class="marker-pulse"></div>
+            <span class="marker-label">Rosemary<small>Mediterranean</small></span>
+          </div>
+          <div class="ingredient-marker" tabindex="0" aria-label="Ingredient from Brazil: Orange" style="left:35%;top:73%;">
+            <div class="marker-pulse"></div>
+            <span class="marker-label">Orange<small>Brazil</small></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curve Separator 2: About -> Products -->
+  <div class="curve-separator" aria-hidden="true">
+     <svg viewBox="0 0 1440 80"><path d="M0,40c180,48,460,14,740,18c280,4,440,61,700,0v42H0z"></path></svg>
+  </div>
+
+  <section id="products" class="products-section">
+    <div class="container mx-auto px-4">
+      <h2>Artisanal Collections</h2>
+      <div class="products-grid">
+        <!-- Product Card 1 -->
+        <div class="product-card" tabindex="0" role="button" aria-label="View Serenity Blend Oil">
+          <img src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/scent2.jpg" loading="lazy" alt="Serenity Blend Oil bottle with lavender sprigs">
+          <div class="product-info">
+            <div> <!-- Wrapper for top content -->
+                <h3>Serenity Blend Oil</h3>
+                <p>Calming Lavender & Chamomile</p>
+            </div>
+            <span class="product-link mt-4">
+              <i class="fa-solid fa-eye"></i> View Product
+            </span>
+          </div>
+        </div>
+        <!-- Product Card 2 -->
+        <div class="product-card" tabindex="0" role="button" aria-label="View Focus Flow Oil">
+          <img src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/scent4.jpg" loading="lazy" alt="Focus Flow Oil bottle with rosemary and mint leaves">
+          <div class="product-info">
+            <div>
+                <h3>Focus Flow Oil</h3>
+                <p>Invigorating Rosemary & Mint</p>
+            </div>
+            <span class="product-link mt-4">
+              <i class="fa-solid fa-eye"></i> View Product
+            </span>
+          </div>
+        </div>
+        <!-- Product Card 3 -->
+        <div class="product-card" tabindex="0" role="button" aria-label="View Citrus Burst Soap">
+          <img src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/soap4.jpg" loading="lazy" alt="Handmade Citrus Burst Soap bar with orange slices">
+          <div class="product-info">
+            <div>
+                <h3>Citrus Burst Soap</h3>
+                <p>Energizing Lemon & Orange</p>
+            </div>
+            <span class="product-link mt-4">
+              <i class="fa-solid fa-eye"></i> View Product
+            </span>
+          </div>
+        </div>
+        <!-- Product Card 4 -->
+        <div class="product-card" tabindex="0" role="button" aria-label="View Woodland Retreat Soap">
+          <img src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/soap6.jpg" loading="lazy" alt="Handmade Woodland Retreat Soap bar with pine needles">
+          <div class="product-info">
+            <div>
+                <h3>Woodland Retreat Soap</h3>
+                <p>Grounding Cedarwood & Pine</p>
+            </div>
+            <span class="product-link mt-4">
+              <i class="fa-solid fa-eye"></i> View Product
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curve Separator 3: Products -> Finder -->
+  <div class="curve-separator" aria-hidden="true">
+    <svg viewBox="0 0 1440 80"><path d="M0,0c160,64,480,54,720,30c240,-24,520,-24,720,40v40H0z"></path></svg>
+  </div>
+
+  <section id="finder" class="finder-section">
+    <div class="container mx-auto px-4">
+      <div class="quiz-wrap">
+        <div class="quiz-headline">Discover Your Perfect Scent</div>
+        <form id="scentQuiz" class="multi-quiz" autocomplete="off">
+          <!-- Step 1 -->
+          <div class="quiz-step active" data-step="1">
+            <div class="quiz-q"><i class="fa-solid fa-lightbulb"></i> How do you want to feel?</div>
+            <div class="quiz-options">
+              <button type="button" class="quiz-opt" data-value="relax"><i class="fa-solid fa-couch"></i> Relaxed</button>
+              <button type="button" class="quiz-opt" data-value="energize"><i class="fa-solid fa-bolt"></i> Energized</button>
+              <button type="button" class="quiz-opt" data-value="focus"><i class="fa-solid fa-crosshairs"></i> Focused</button>
+              <button type="button" class="quiz-opt" data-value="sleep"><i class="fa-solid fa-bed"></i> Sleepy</button>
+            </div>
+          </div>
+          <!-- Step 2 -->
+          <div class="quiz-step" data-step="2">
+            <div class="quiz-q"><i class="fa-solid fa-leaf"></i> Which scent family calls to you?</div>
+            <div class="quiz-options">
+              <button type="button" class="quiz-opt" data-value="floral"><i class="fa-solid fa-fan"></i> Floral</button>
+              <button type="button" class="quiz-opt" data-value="citrus"><i class="fa-solid fa-lemon"></i> Citrus</button>
+              <button type="button" class="quiz-opt" data-value="woody"><i class="fa-solid fa-tree"></i> Woody</button>
+              <button type="button" class="quiz-opt" data-value="herbal"><i class="fa-solid fa-mortar-pestle"></i> Herbal</button>
+            </div>
+          </div>
+          <!-- Step 3 -->
+          <div class="quiz-step" data-step="3">
+            <div class="quiz-q"><i class="fa-solid fa-spray-can-sparkles"></i> Choose your preferred format:</div>
+            <div class="quiz-options">
+              <button type="button" class="quiz-opt" data-value="oil"><i class="fa-solid fa-bottle-droplet"></i> Essential Oil</button>
+              <button type="button" class="quiz-opt" data-value="soap"><i class="fa-solid fa-soap"></i> Artisan Soap</button>
+              <button type="button" class="quiz-opt" data-value="both"><i class="fa-solid fa-boxes-stacked"></i> Surprise Me!</button>
+            </div>
+          </div>
+          <div class="quiz-progress">
+            Step <span id="quizStepNum">1</span> of 3
+          </div>
+        </form>
+        <!-- Quiz Result Area -->
+        <div class="quiz-result" id="quizResult">
+          <h4>Your Aroma Profile Suggests:</h4>
+          <div class="products-grid" id="quizProducts">
+             <!-- Product cards injected by JS -->
+          </div>
+          <a href="#products" class="cta-main">
+            <i class="fa-solid fa-gift"></i> Shop All Collections
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curve Separator 4: Finder -> Testimonials -->
+  <div class="curve-separator" aria-hidden="true">
+    <svg viewBox="0 0 1440 80"><path d="M0,50c210,38,470,12,700,16c230,4,330,34,740,0v14H0z"></path></svg>
+  </div>
+
+  <section id="testimonials" class="testimonials-section">
+    <div class="container mx-auto px-4">
+      <h2 class="testi-headline">Hear From Our Community</h2>
+      <div class="testimonials-grid">
+        <!-- Testimonial 1 -->
+        <div class="testimonial" tabindex="0">
+          <p>"The Serenity Blend Oil is pure magic in a bottle. It's become an essential part of my evening wind-down routine. Truly calming."</p>
+          <span class="testi-author"><i class="fa-solid fa-user-check"></i> Sarah L.</span>
+          <span class="testi-stars" aria-label="5 out of 5 stars">★★★★★</span>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="testimonial" tabindex="0">
+          <p>"I was skeptical about focus oils, but the Focus Flow Blend genuinely helps clear my head during long workdays. The scent is refreshing, not overpowering."</p>
+          <span class="testi-author"><i class="fa-solid fa-user-check"></i> Michael T.</span>
+          <span class="testi-stars" aria-label="5 out of 5 stars">★★★★★</span>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="testimonial" tabindex="0">
+          <p>"These soaps are divine! The Citrus Burst leaves my skin feeling soft and smells incredible. Plus, they look beautiful in my bathroom."</p>
+          <span class="testi-author"><i class="fa-solid fa-user-check"></i> Emma R.</span>
+          <span class="testi-stars" aria-label="5 out of 5 stars">★★★★★</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   <!-- Curve Separator 5: Testimonials -> Newsletter -->
+  <div class="curve-separator" aria-hidden="true">
+     <!-- This curve needs to be filled with the newsletter background color -->
+    <svg viewBox="0 0 1440 80"><path d="M0,30 Q360,80 720,50 T1440,70 V80 H0 Z"></path></svg>
+  </div>
+
+  <section class="newsletter-section" id="contact">
+    <div class="container mx-auto px-4 newsletter-content">
+      <h2>Join The Scent Insiders</h2>
+      <p>Subscribe for exclusive early access, wellness tips, and special offers delivered straight to your inbox.</p>
+      <form class="newsletter-form">
+        <input type="email" required placeholder="Enter your email address" aria-label="Email Address" class="flex-1">
+        <button type="submit"><i class="fa-solid fa-paper-plane mr-2"></i> Subscribe Now</button>
+      </form>
+      <small class="mt-4 block">We respect your privacy. Unsubscribe anytime.</small>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-main container mx-auto px-4">
+      <div class="footer-about">
+        <h3><i class="fa-solid fa-feather-pointed mr-2"></i>The Scent</h3>
+        <p>Crafting premium aromatherapy and wellness products inspired by nature's harmony. Globally sourced, expertly blended, delivered with care.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Pinterest" title="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" aria-label="Twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#products">Shop Oils</a></li>
+          <li><a href="#products">Shop Soaps</a></li>
+          <li><a href="#">Gift Sets</a></li>
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#finder">Scent Quiz</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>Customer Care</h3>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h3>Get In Touch</h3>
+        <p><i class="fas fa-map-marker-alt fa-fw"></i> 123 Aroma Lane, Wellness City, WC 10001</p>
+        <p><i class="fas fa-phone fa-fw"></i> <a href="tel:+15551234567">+1 (555) 123-4567</a></p>
+        <p><i class="fas fa-envelope fa-fw"></i> <a href="mailto:care@thescent.com">care@thescent.com</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>
+        &copy; <span id="copyYear">2024</span> The Scent. All Rights Reserved.
+      </div>
+      <div class="payment-methods mt-2">
+        <i class="fab fa-cc-visa" title="Visa"></i>
+        <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+        <i class="fab fa-cc-paypal" title="PayPal"></i>
+        <i class="fab fa-cc-amex" title="American Express"></i>
+        <i class="fab fa-cc-discover" title="Discover"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    'use strict'; // Enable strict mode
+
+    // --- DOM Ready Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // ------- DARK/LIGHT MODE TOGGLE ------
+      const darkToggle = document.getElementById('darkToggle');
+      const body = document.body;
+      const darkToggleIcon = darkToggle.querySelector('i');
+
+      // Function to apply theme
+      const applyTheme = (isDark) => {
+        if (isDark) {
+          body.classList.add('dark');
+          darkToggleIcon.classList.remove('fa-moon');
+          darkToggleIcon.classList.add('fa-sun');
+          darkToggle.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+          body.classList.remove('dark');
+          darkToggleIcon.classList.add('fa-moon');
+          darkToggleIcon.classList.remove('fa-sun');
+          darkToggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+      };
+
+      // Check for saved theme preference or system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      const savedTheme = localStorage.getItem('theme');
+
+      let isDarkMode = false;
+      if (savedTheme === 'dark') {
+        isDarkMode = true;
+      } else if (savedTheme === 'light') {
+        isDarkMode = false;
+      } else {
+        isDarkMode = prefersDark.matches; // Use system preference if no override
+      }
+
+      applyTheme(isDarkMode); // Apply initial theme
+
+      // Listener for toggle button
+      darkToggle.addEventListener('click', () => {
+        isDarkMode = !body.classList.contains('dark');
+        applyTheme(isDarkMode);
+        // Save preference
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+      });
+
+      // Listener for system preference changes
+      prefersDark.addEventListener('change', (e) => {
+        // Only update if no manual override is set
+        if (!localStorage.getItem('theme')) {
+            applyTheme(e.matches);
+            isDarkMode = e.matches;
+        }
+      });
+
+
+      // ------ AMBIENT SOUND TOGGLE --------------
+      const scentAudio = document.getElementById('scentAudio');
+      const audioBtn = document.getElementById('audioBtn');
+      const audioBtnIcon = audioBtn.querySelector('i');
+      let isAudioOn = false; // State variable
+
+      const toggleAudio = () => {
+        if (scentAudio.paused) {
+          scentAudio.volume = 0.15; // Lower volume
+          scentAudio.play().then(() => {
+              isAudioOn = true;
+              audioBtnIcon.classList.remove('fa-volume-xmark');
+              audioBtnIcon.classList.add('fa-volume-high');
+              audioBtn.setAttribute('aria-label', 'Mute ambient sound');
+          }).catch(error => {
+              console.error("Audio play failed:", error);
+              // Handle browsers that block autoplay without user interaction
+          });
+        } else {
+          scentAudio.pause();
+          isAudioOn = false;
+          audioBtnIcon.classList.add('fa-volume-xmark');
+          audioBtnIcon.classList.remove('fa-volume-high');
+          audioBtn.setAttribute('aria-label', 'Unmute ambient sound');
+        }
+      };
+
+      audioBtn.addEventListener('click', toggleAudio);
+
+      // Optional: Stop audio if user navigates away or closes tab
+      window.addEventListener('beforeunload', () => {
+        if (isAudioOn) {
+            scentAudio.pause();
+        }
+      });
+
+
+      // --------- PARALLAX INGREDIENT IMAGE (Optimized) --------
+      const parallaxImgContainer = document.getElementById('aboutParallaxImgContainer');
+      const parallaxImg = document.getElementById('aboutParallaxImg');
+
+      if (parallaxImg && window.matchMedia('(pointer: fine)').matches && window.matchMedia('(min-width: 901px)').matches) {
+        let ticking = false;
+
+        const handleScroll = () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              const rect = parallaxImgContainer.getBoundingClientRect();
+              const windowHeight = window.innerHeight;
+
+              // Calculate visibility: 0 = just entered bottom, 1 = fully visible, 2 = exiting top
+              const visibility = (windowHeight - rect.top) / (windowHeight + rect.height);
+              const clampedVisibility = Math.max(0, Math.min(1, visibility)); // Clamp between 0 and 1 for effect calculation
+
+              if (rect.bottom > 0 && rect.top < windowHeight) { // If the element is roughly in view
+                parallaxImgContainer.classList.add('scrolled');
+                const translateY = (clampedVisibility - 0.5) * -30; // Move up as it scrolls up (-15px to +15px)
+                const scale = 1 + clampedVisibility * 0.05; // Scale up slightly (1 to 1.05)
+                const rotateZ = (clampedVisibility - 0.5) * 6; // Rotate slightly (-3deg to +3deg)
+                const blur = Math.max(0, 2 - clampedVisibility * 3.5); // Blur decreases as it comes into view
+                const saturate = 1 + clampedVisibility * 0.1; // Saturation increases
+
+                parallaxImg.style.transform = `translateY(${translateY}px) scale(${scale}) rotateZ(${rotateZ}deg)`;
+                parallaxImg.style.filter = `blur(${blur}px) saturate(${saturate})`;
+              } else {
+                // Reset styles when out of view (optional, could leave last state)
+                // parallaxImgContainer.classList.remove('scrolled');
+                // parallaxImg.style.transform = 'translateY(0) scale(1) rotateZ(0deg)';
+                // parallaxImg.style.filter = 'blur(2px) saturate(1)';
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Initial check
+      }
+
+
+      // --------- INTERACTIVE QUIZ LOGIC (Improved) ------------
+      const quizForm = document.getElementById('scentQuiz');
+      const quizSteps = quizForm.querySelectorAll('.quiz-step');
+      const quizStepNum = document.getElementById('quizStepNum');
+      const quizResultDiv = document.getElementById('quizResult');
+      const quizProductsDiv = document.getElementById('quizProducts');
+      const totalSteps = quizSteps.length;
+      let currentStepIndex = 0;
+      let quizAnswers = {}; // Use an object for named answers
+
+      const showStep = (index) => {
+        quizSteps.forEach((step, i) => {
+          step.classList.toggle('active', i === index);
+        });
+        quizStepNum.textContent = index + 1;
+        quizForm.style.display = 'block';
+        quizResultDiv.style.display = 'none';
+         // Scroll quiz into view if needed
+         quizForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
+      const generateProductHTML = (p) => `
+        <div class="product-card" tabindex="0">
+           <img src="https://raw.githubusercontent.com/nordeim/The-Scent/refs/heads/main/images/${p.img}" loading="lazy" alt="${p.name}">
+           <div class="product-info">
+             <div>
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+             </div>
+             <span class="product-link mt-4"><i class="fa-solid fa-eye"></i> View</span>
+           </div>
+         </div>`;
+
+       const showResult = () => {
+          quizForm.style.display = 'none';
+          quizResultDiv.style.display = 'block';
+
+          // --- More sophisticated recommendation logic ---
+          const { feeling, scentFamily, format } = quizAnswers;
+          let recommendedProducts = [];
+
+          // Define all products
+          const allProducts = [
+              { id: 1, name: "Serenity Blend Oil", desc: "Lavender & Chamomile", img: "scent2.jpg", tags: ["relax", "sleep", "floral", "herbal", "oil"] },
+              { id: 2, name: "Focus Flow Oil", desc: "Rosemary & Mint", img: "scent4.jpg", tags: ["focus", "energize", "herbal", "oil"] },
+              { id: 3, name: "Citrus Burst Soap", desc: "Lemon & Orange", img: "soap4.jpg", tags: ["energize", "focus", "citrus", "soap"] },
+              { id: 4, name: "Woodland Retreat Soap", desc: "Cedarwood & Pine", img: "soap6.jpg", tags: ["relax", "grounding", "woody", "soap"] },
+              // Add more products here
+              { id: 5, name: "Uplift Blend Oil", desc: "Bergamot & Grapefruit", img: "scent5.jpg", tags: ["energize", "focus", "citrus", "oil"] },
+              { id: 6, name: "Calm Embrace Soap", desc: "Sandalwood & Vanilla", img: "soap1.jpg", tags: ["relax", "sleep", "woody", "sweet", "soap"] }
+          ];
+
+          // Filter based on answers
+          recommendedProducts = allProducts.filter(p => {
+              let match = false;
+              // Match feeling/primary tag
+              if (p.tags.includes(feeling)) match = true;
+              // Match scent family
+              if (p.tags.includes(scentFamily)) match = true;
+              // Match format (unless 'both' was chosen)
+              if (format !== 'both' && !p.tags.includes(format)) return false;
+              return match;
+          });
+
+         // If specific matches are few, add more general ones
+          if (recommendedProducts.length < 2) {
+              const generalRecs = allProducts.filter(p => !recommendedProducts.includes(p) && (format === 'both' || p.tags.includes(format)));
+              recommendedProducts = [...recommendedProducts, ...generalRecs.slice(0, 2 - recommendedProducts.length)];
+          }
+
+          // Ensure we have at least 2 recommendations, prioritizing format if specific
+          if (recommendedProducts.length < 2) {
+             recommendedProducts = allProducts.filter(p => format === 'both' || p.tags.includes(format)).slice(0, 2);
+          }
+          // Limit to max 2-4 results for the quiz display
+           recommendedProducts = recommendedProducts.slice(0, 2);
+
+
+          // Display results
+          if (recommendedProducts.length > 0) {
+            quizProductsDiv.innerHTML = recommendedProducts.map(generateProductHTML).join('');
+          } else {
+            // Fallback if absolutely no match (shouldn't happen with current logic)
+            quizProductsDiv.innerHTML = `<p>We have many wonderful options! Please browse our full collection.</p>`;
+          }
+
+          // Scroll results into view
+           quizResultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
+      // Add event listeners to quiz option buttons
+      quizForm.querySelectorAll('.quiz-opt').forEach(button => {
+        button.addEventListener('click', () => {
+          const currentStepElement = quizSteps[currentStepIndex];
+          const stepValue = button.dataset.value;
+          const stepName = currentStepElement.querySelector('.quiz-q i').classList[1].split('-')[1]; // e.g., lightbulb -> 'feeling'
+
+           // More robust way to get step context if icon class isn't reliable
+           // Could use data-attribute on .quiz-step: data-context="feeling"
+           let context = 'unknown';
+           if (currentStepIndex === 0) context = 'feeling';
+           else if (currentStepIndex === 1) context = 'scentFamily';
+           else if (currentStepIndex === 2) context = 'format';
+
+           quizAnswers[context] = stepValue;
+
+
+          if (currentStepIndex < totalSteps - 1) {
+            currentStepIndex++;
+            showStep(currentStepIndex);
+          } else {
+            showResult();
+          }
+        });
+      });
+
+      // Initialize quiz on load
+      showStep(0);
+
+
+      // ----------- Testimonial Intersection Observer (Fade-in) -----
+      const testimonials = document.querySelectorAll('.testimonial');
+      const testimonialObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // Stop observing once visible
+          }
+        });
+      }, {
+        rootMargin: '0px',
+        threshold: 0.2 // Trigger when 20% is visible
+      });
+
+      testimonials.forEach(testimonial => {
+        testimonialObserver.observe(testimonial);
+      });
+
+
+      // ----------- Ingredient Marker Tooltip Accessibility -----
+      document.querySelectorAll('.ingredient-marker').forEach(marker => {
+        const label = marker.querySelector('.marker-label');
+        if (label) {
+            marker.addEventListener('focus', () => { label.style.opacity = 1; label.style.visibility = 'visible'; });
+            marker.addEventListener('blur', () => { label.style.opacity = 0; label.style.visibility = 'hidden';});
+            marker.addEventListener('mouseenter', () => { label.style.opacity = 1; label.style.visibility = 'visible'; });
+            marker.addEventListener('mouseleave', () => { label.style.opacity = 0; label.style.visibility = 'hidden'; });
+
+            // Add keydown for Enter/Space to mimic click (though not needed here as they just show tooltips)
+            marker.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    // Prevent default space scroll
+                    e.preventDefault();
+                    // Manually trigger focus to show tooltip
+                    marker.focus();
+                }
+            });
+        }
+      });
+
+
+      // ----------- Newsletter Form Submission (Demo) -----
+      const newsletterForm = document.querySelector('.newsletter-form');
+      if (newsletterForm) {
+        newsletterForm.addEventListener('submit', e => {
+          e.preventDefault();
+          const emailInput = newsletterForm.querySelector('input[type="email"]');
+          // Basic validation check
+          if (emailInput && emailInput.value && emailInput.checkValidity()) {
+              // Simulate submission
+              const submitButton = newsletterForm.querySelector('button');
+              const originalButtonText = submitButton.innerHTML;
+              submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Subscribing...';
+              submitButton.disabled = true;
+
+              setTimeout(() => {
+                  alert(`Thank you for subscribing with ${emailInput.value}!`);
+                  newsletterForm.reset();
+                  submitButton.innerHTML = originalButtonText;
+                  submitButton.disabled = false;
+              }, 1000); // Simulate network delay
+          } else {
+              alert("Please enter a valid email address.");
+              emailInput.focus();
+          }
+        });
+      }
+
+      // --- Footer Copyright Year ---
+      const yearSpan = document.getElementById('copyYear');
+      if(yearSpan) {
+          yearSpan.textContent = new Date().getFullYear();
+      }
+
+    }); // End DOMContentLoaded
+
+  </script>
+</body>
+</html>

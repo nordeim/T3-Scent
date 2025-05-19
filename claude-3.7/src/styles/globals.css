@@ -1,6 +1,148 @@
-@import "tailwindcss";
+/* src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+/*
+  Imported Google Fonts via <link> in layout.tsx:
+  - Cormorant Garamond: For headings
+  - Montserrat: For body text
+  - Raleway: For accent text (e.g., navigation links, special buttons)
+*/
+
+@layer base {
+  :root {
+    /* Fonts from sample_landing_page.html */
+    --font-head: 'Cormorant Garamond', serif;
+    --font-body: 'Montserrat', sans-serif;
+    --font-accent: 'Raleway', sans-serif;
+
+    /* Base Colors from sample_landing_page.html (Light Mode) */
+    --clr-bg-html: #f8f7f4;         /* Page background */
+    --clr-bg-alt-html: #ffffff;     /* Card/contrast background */
+    --clr-text-html: #333d41;       /* Base text color */
+    --clr-primary-html: #2a7c8a;    /* Primary interactive elements */
+    --clr-accent-html: #e0a86f;     /* Secondary interactive/highlight */
+    --clr-cta-html: #ff7b4f;        /* Call to action buttons */
+    
+    /* Mapping to Shadcn/ui style CSS variables (using HSL values) */
+    /* You'll need to convert your hex/rgb colors to HSL for this system */
+    /* Or, modify tailwind.config.ts to use var(--clr-...) directly */
+
+    /* Example HSL mappings (CONVERT YOUR HEX TO HSL - e.g., using an online tool) */
+    /* --clr-bg-html: #f8f7f4 -> approx HSL: 40 33% 97% */
+    --background: 40 33% 97%;
+    /* --clr-bg-alt-html: #ffffff -> HSL: 0 0% 100% */
+    --card: 0 0% 100%; /* For card backgrounds */
+    --popover: 0 0% 100%;
+    /* --clr-text-html: #333d41 -> approx HSL: 200 11% 23% */
+    --foreground: 200 11% 23%;
+    
+    /* --clr-primary-html: #2a7c8a -> approx HSL: 190 53% 35% */
+    --primary: 190 53% 35%;
+    --primary-foreground: 40 33% 97%; /* Text on primary (e.g. white) */
+    
+    /* --clr-accent-html: #e0a86f -> approx HSL: 32 60% 66% */
+    --secondary: 32 60% 66%; /* Using sample's accent as secondary */
+    --secondary-foreground: 200 11% 23%; /* Text on secondary (e.g. dark) */
+
+    /* --clr-cta-html: #ff7b4f -> approx HSL: 14 100% 65% */
+    --accent: 14 100% 65%; /* Using sample's CTA as accent for Shadcn */
+    --accent-foreground: 0 0% 100%; /* Text on accent (e.g. white) */
+
+    --muted: 210 40% 96.1%; /* Default Shadcn light muted */
+    --muted-foreground: 215.4 16.3% 46.9%; /* Default Shadcn light muted-foreground */
+    
+    --destructive: 0 84.2% 60.2%; /* Default Shadcn destructive */
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%; /* Default Shadcn light border */
+    --input: 214.3 31.8% 91.4%;  /* Default Shadcn light input */
+    --ring: 190 53% 35%;         /* Default Shadcn light ring (primary color) */
+
+    --radius: 0.5rem; /* Consistent border radius */
+  }
+
+  .dark {
+    /* Dark Mode Colors from sample_landing_page.html */
+    --clr-bg-dark-html: #1a202c;
+    --clr-bg-alt-dark-html: #2d3748;
+    --clr-text-dark-html: #e2e8f0;
+    --clr-primary-dark-html: #4fd1c5;
+    --clr-accent-dark-html: #f6ad55;
+    --clr-cta-dark-html: #ff8c69;
+
+    /* Mapping to Shadcn/ui style CSS variables for dark mode */
+    /* --clr-bg-dark-html: #1a202c -> approx HSL: 215 28% 14% */
+    --background: 215 28% 14%;
+    /* --clr-bg-alt-dark-html: #2d3748 -> HSL: 215 25% 23% */
+    --card: 215 25% 23%;
+    --popover: 215 25% 23%;
+    /* --clr-text-dark-html: #e2e8f0 -> HSL: 215 28% 90% */
+    --foreground: 215 28% 90%;
+    
+    /* --clr-primary-dark-html: #4fd1c5 -> HSL: 175 56% 57% */
+    --primary: 175 56% 57%;
+    --primary-foreground: 215 28% 14%; /* Text on primary (e.g. dark) */
+    
+    /* --clr-accent-dark-html: #f6ad55 -> HSL: 36 90% 65% */
+    --secondary: 36 90% 65%;
+    --secondary-foreground: 215 28% 14%; /* Text on secondary (e.g. dark) */
+
+    /* --clr-cta-dark-html: #ff8c69 -> HSL: 15 100% 71% */
+    --accent: 15 100% 71%;
+    --accent-foreground: 215 28% 14%; /* Text on accent (e.g. dark) */
+
+    --muted: 217.2 32.6% 17.5%; /* Default Shadcn dark muted */
+    --muted-foreground: 215 20.2% 65.1%; /* Default Shadcn dark muted-foreground */
+    
+    --destructive: 0 62.8% 30.6%; /* Default Shadcn dark destructive */
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%; /* Default Shadcn dark border */
+    --input: 217.2 32.6% 17.5%;  /* Default Shadcn dark input */
+    --ring: 175 56% 57%;         /* Default Shadcn dark ring (primary color) */
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body); /* Use Montserrat for body */
+    line-height: 1.7;
+    min-height: 100vh;
+    transition-property: background-color, color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms; /* Smoother transition from sample */
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-head); /* Use Cormorant Garamond */
+    @apply font-bold tracking-wide text-primary; /* Tailwind classes for color */
+    line-height: 1.2;
+    margin-bottom: 0.75em;
+  }
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+     @apply text-primary; /* Primary color in dark mode from vars should be lighter */
+     /* Or use a specific dark heading color: color: var(--clr-primary-dark-html); */
+  }
+  /* Specific heading sizes if needed beyond Tailwind's defaults */
+  h1 { @apply text-4xl md:text-5xl; }
+  h2 { @apply text-3xl md:text-4xl; }
+  h3 { @apply text-2xl md:text-3xl; }
+
+
+  a {
+    @apply text-primary transition-colors duration-300;
+    text-decoration: none;
+  }
+  a:hover {
+    @apply text-accent; /* Using accent for link hover as per sample */
+    opacity: 0.9;
+  }
+  a:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 rounded-sm;
+  }
+  /* Dark mode link colors will be handled by text-primary and text-accent variables */
 }
