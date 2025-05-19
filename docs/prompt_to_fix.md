@@ -14,3 +14,6 @@ I need the following:
 ---
 really awesome job! Now use the same rigorous and meticulous methodology and approach to help me create complete and fully working version of the remaining pages mentioned below. Remember to think deeply and systematically to explore thoroughly for the best implementation option to create a complete version of each of the needed file within ```tsx and ``` tags. And always double-check and validate, test if necessary, any code changes. Also make sure you plan first before you execute.
 
+---
+please refer to the attached `to_do,txt` to create a complete updated global.css in canvas mode within ```css and ``` tag
+

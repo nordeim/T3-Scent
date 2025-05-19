@@ -12,30 +12,21 @@
 
 @layer base {
   :root {
-    /* --- Font Variables (as defined in sample_landing_page.html) --- */
+    /* --- Font Variables --- */
     --font-head: 'Cormorant Garamond', serif;
     --font-body: 'Montserrat', sans-serif;
     --font-accent: 'Raleway', sans-serif;
 
-    /* 
-      LIGHT MODE THEME - Shadcn/ui compatible HSL variables
-      --------------------------------------------------------------------
-      CRITICAL: The HSL values below MUST be in the format:
-      <HUE_value_0_to_360> <SATURATION_value_0_to_100>% <LIGHTNESS_value_0_to_100>%
-      Example: If your HTML's --clr-bg is #f8f7f4, convert it to HSL.
-               #f8f7f4 is approximately HSL(40, 33%, 97%).
-               So, you would write: --theme-bg-light: 40 33% 97%;
-      --------------------------------------------------------------------
-    */
-    /* Replace these with YOUR ACCURATE HSL conversions from sample_landing_page.html */
-    --theme-bg-light: 40 33% 97%;    /* e.g., for #f8f7f4 */
-    --theme-bg-alt-light: 0 0% 100%;  /* e.g., for #ffffff */
-    --theme-text-light: 202 13% 23%;  /* e.g., for #333d41 */
-    --theme-primary-light: 190 53% 35%; /* e.g., for #2a7c8a */
-    --theme-accent-light: 32 60% 66%;  /* e.g., for #e0a86f (sample's HTML accent) */
-    --theme-cta-light: 14 100% 65%;    /* e.g., for #ff7b4f (sample's HTML cta) */
+    /* --- LIGHT MODE THEME COLORS (Ensure HSL values are space-separated numbers/percentages) --- */
+    /* Replace these with YOUR ACCURATE HSL conversions from your design */
+    --theme-bg-light: 44 22% 97%;         /* Original: #f8f7f4 */
+    --theme-bg-alt-light: 0 0% 100%;      /* Original: #ffffff */
+    --theme-text-light: 202 13% 23%;      /* Original: #333d41 */
+    --theme-primary-light: 188 53% 35%;   /* Original: #2a7c8a */
+    --theme-accent-light: 32 60% 66%;     /* Original: #e0a86f (sample's HTML accent) */
+    --theme-cta-light: 17 100% 65%;       /* Original: #ff7b4f (sample's HTML cta) */
 
-    /* --- Shadcn/ui style CSS Variables (Light Mode) - These consume the --theme-* vars --- */
+    /* --- Shadcn/ui style CSS Variables (Light Mode) --- */
     --background: var(--theme-bg-light);
     --foreground: var(--theme-text-light);
     
@@ -46,43 +37,36 @@
     --popover-foreground: var(--theme-text-light);
 
     --primary: var(--theme-primary-light);
-    --primary-foreground: 0 0% 100%;         /* White text on primary */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
     
     --secondary: var(--theme-accent-light);     
-    --secondary-foreground: 200 11% 18%;     
+    --secondary-foreground: 202 13% 23%; /* Dark text for contrast on this secondary */
 
-    --muted: 210 40% 96.1%; /* Can also be derived from your theme or kept generic */
-    --muted-foreground: 215 20% 55%; 
+    --muted: 210 40% 96.1%; 
+    --muted-foreground: 215 20% 45%; /* Slightly darker for better contrast */
 
     --accent: var(--theme-cta-light);           
     --accent-foreground: 0 0% 100%;          
 
-    --destructive: 0 84% 60%; /* Keep generic or theme if available */
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 90%; 
-    --input: 214 32% 90%;  
+    --border: 214 31.8% 88%; /* Slightly darker for better visibility */
+    --input: 214 31.8% 88%;  
     --ring: var(--primary); 
 
     --radius: 0.5rem;
   }
 
   .dark {
-    /* 
-      DARK MODE THEME - Shadcn/ui compatible HSL variables
-      --------------------------------------------------------------------
-      CRITICAL: Replace these HSL values with ACCURATE HSL conversions
-      from your --clr-*-dark variables in sample_landing_page.html.
-      Format: <HUE_value> <SATURATION_value>% <LIGHTNESS_value>%
-      --------------------------------------------------------------------
-    */
+    /* --- DARK MODE THEME COLORS (Ensure HSL values are space-separated) --- */
     /* Replace these with YOUR ACCURATE HSL conversions */
-    --theme-bg-dark: 215 28% 14%;      /* e.g., for #1a202c */
-    --theme-bg-alt-dark: 215 25% 23%;  /* e.g., for #2d3748 */
-    --theme-text-dark: 215 28% 90%;    /* e.g., for #e2e8f0 */
-    --theme-primary-dark: 175 56% 57%; /* e.g., for #4fd1c5 */
-    --theme-accent-dark: 36 90% 65%;   /* e.g., for #f6ad55 */
-    --theme-cta-dark: 15 100% 71%;     /* e.g., for #ff8c69 */
+    --theme-bg-dark: 220 21% 14%;         /* Original: #1a202c */
+    --theme-bg-alt-dark: 221 23% 23%;     /* Original: #2d3748 */
+    --theme-text-dark: 214 28% 90%;       /* Original: #e2e8f0 */
+    --theme-primary-dark: 174 56% 57%;    /* Original: #4fd1c5 */
+    --theme-accent-dark: 33 89% 65%;      /* Original: #f6ad55 */
+    --theme-cta-dark: 15 100% 71%;        /* Original: #ff8c69 */
 
     /* --- Shadcn/ui style CSS Variables (Dark Mode) --- */
     --background: var(--theme-bg-dark);
@@ -95,37 +79,40 @@
     --popover-foreground: var(--theme-text-dark);
 
     --primary: var(--theme-primary-dark);
-    --primary-foreground: 215 28% 10%; 
+    --primary-foreground: 220 21% 10%; /* Darker text for contrast */
     
     --secondary: var(--theme-accent-dark);
-    --secondary-foreground: 215 28% 10%; 
+    --secondary-foreground: 220 21% 10%; 
 
-    --muted: 217 33% 20%; 
-    --muted-foreground: 215 20% 65%; 
+    --muted: 217 33% 17.5%; 
+    --muted-foreground: 215 20% 65.1%; 
     
     --accent: var(--theme-cta-dark);
-    --accent-foreground: 215 28% 10%; 
+    --accent-foreground: 220 21% 10%; 
 
-    --destructive: 0 70% 40%; 
+    --destructive: 0 62.8% 30.6%; 
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 33% 28%; 
-    --input: 217 33% 28%;  
+    --border: 217 33% 25.5%; /* Slightly adjusted */
+    --input: 217 33% 25.5%;  
     --ring: var(--primary);
   }
 }
 
+/* Base HTML and Body styles */
 @layer base {
   * {
-    @apply border-border; 
+    @apply border-border; /* Applies default border color */
   }
   html {
     @apply scroll-smooth;
-    font-family: var(--font-body);
-    color: hsl(var(--foreground)); /* Use hsl() here for direct application */
-    background-color: hsl(var(--background)); /* Use hsl() here */
+    font-family: var(--font-body); /* Default font for the entire document */
+    /* Base text and background colors applied directly for full coverage */
+    color: hsl(var(--foreground)); 
+    background-color: hsl(var(--background));
   }
   body {
+    @apply text-base; /* Tailwind's base font size */
     line-height: 1.7;
     min-height: 100dvh; 
     text-rendering: optimizeLegibility;
@@ -133,31 +120,28 @@
     -moz-osx-font-smoothing: grayscale;
     display: flex; 
     flex-direction: column; 
-    @apply bg-background text-foreground; /* Also apply Tailwind classes */
+    /* Ensure body itself also gets Tailwind classes if html direct styles are not enough */
+    @apply bg-background text-foreground; 
   }
 
+  /* Headings using the --font-head variable */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-head); 
-    @apply font-bold tracking-tight text-foreground; 
+    @apply font-bold tracking-tight text-foreground; /* Default to foreground */
+    /* For primary color headings, apply 'text-primary' utility class directly in JSX */
     line-height: 1.25; 
-    margin-bottom: 0.75em;
+    margin-bottom: 0.75em; /* Consistent spacing */
   }
-  /* To specifically use your HTML primary color for headings: */
-  /* h1, h2, h3, h4, h5, h6 { color: var(--clr-primary-html); } */
-  /* .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: var(--clr-primary-dark-html); } */
 
-
+  /* Link styles */
   a {
-    @apply text-primary transition-colors duration-200 ease-in-out;
+    @apply text-primary font-medium transition-colors duration-200 ease-in-out;
+    /* Use font-accent for specific links if needed: className="font-accent" */
   }
   a:hover {
-    /* Use the CTA color from sample_landing_page for link hover if desired */
-    /* color: var(--clr-cta-html); */
-    /* For dark mode: */
-    /* .dark & { color: var(--clr-cta-dark-html); } */
-    @apply text-accent opacity-90; /* Current setup uses Shadcn 'accent' */
+    @apply text-accent opacity-90; /* Uses the CTA-mapped accent color for hover */
   }
-  a:focus-visible {
+  a:focus-visible { /* Enhanced focus visibility */
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background rounded-sm;
   }
 }
