@@ -15,34 +15,33 @@ interface ProductsPageProps {
     page?: string;
     sortBy?: string;
     category?: string;
+    // ... other potential filters
   };
 }
 
-export default async function ProductsPage({ params, searchParams }: ProductsPageProps) {
-  // Access props at the beginning
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+  // Access searchParams properties at the beginning
   const pageParam = searchParams?.page;
   const sortByParam = searchParams?.sortBy;
   const categoryParam = searchParams?.category;
 
-  const serverApi = await createServerActionClient(); // Then other async operations
   const currentPage = parseInt(pageParam || "1");
   const limit = 12; 
 
-  // Now, perform async operations like creating the tRPC client
+  // Declare serverApi ONCE here
   const serverApi = await createServerActionClient();
 
   let productsData;
   try {
-    // Use the accessed params for the query
-    productsData = await serverApi.products.getAll({ // Correct: no .query()
+    productsData = await serverApi.products.getAll({
       limit,
-      // categoryId: categoryParam, // Uncomment and implement when category filtering is ready in backend
-      // sortBy: sortByParam as any, // Uncomment and implement with proper type validation
+      categoryId: categoryParam, // Pass the category to the API
+      sortBy: sortByParam as any, // Pass sort - ensure your API handles this type
+      // Add cursor logic for pagination based on currentPage if needed
     });
   } catch (error) {
     console.error("Error fetching products for ProductsPage:", error);
     if (error instanceof Error && 'shape' in error && (error as any).shape?.data?.code === 'NOT_FOUND') {
-        // Handle expected "No procedure found" more gracefully if it's about a sub-procedure or path
         console.warn("A specific sub-procedure might be missing for products.getAll filters or includes.");
     } else if (error instanceof Error && 'shape' in error) { 
         console.error("TRPC Error Shape:", (error as any).shape);
@@ -53,33 +52,34 @@ export default async function ProductsPage({ params, searchParams }: ProductsPag
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="mb-8 md:mb-10 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Our Collection</h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl font-head">Our Collection</h1>
+        <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto font-body">
           Explore a wide range of natural products designed for your well-being and sensory delight.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        <aside className="lg:col-span-1 lg:sticky lg:top-24 self-start">
+        <aside className="lg:col-span-1 lg:sticky lg:top-24 self-start"> {/* Ensure top value matches navbar height + some space */}
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-foreground mb-4">Filter & Sort</h2>
-            <p className="text-sm text-muted-foreground mb-4">(Filter UI Placeholder)</p>
-            <div className="space-y-3">
+            <h2 className="text-xl font-semibold text-foreground font-head mb-4">Filter & Sort</h2>
+            {/* <ProductFiltersClient currentFilters={{ category: categoryParam, sortBy: sortByParam }} /> */}
+            <div className="space-y-6">
               <div>
-                <h3 className="text-sm font-medium text-foreground mb-1">Categories</h3>
-                <ul className="space-y-1 text-sm">
-                    <li><Link href={`/products?category=essential-oils${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary">Essential Oils</Link></li>
-                    <li><Link href={`/products?category=diffusers${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary">Diffusers</Link></li>
-                    <li><Link href={`/products?category=candles${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary">Candles</Link></li>
-                    <li><Link href={`/products?category=blends${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary">Signature Blends</Link></li>
+                <h3 className="text-sm font-medium text-foreground mb-2 font-accent uppercase tracking-wider">Categories</h3>
+                <ul className="space-y-1.5 text-sm">
+                    <li><Link href={`/products?category=essential-oils${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Essential Oils</Link></li>
+                    <li><Link href={`/products?category=diffusers${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Diffusers</Link></li>
+                    <li><Link href={`/products?category=candles${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Candles</Link></li>
+                    <li><Link href={`/products?category=blends${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Signature Blends</Link></li>
                 </ul>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-foreground mb-1">Sort By</h3>
-                <ul className="space-y-1 text-sm">
-                    <li><Link href={`/products?sortBy=createdAt_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary">Newest</Link></li>
-                    <li><Link href={`/products?sortBy=price_asc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary">Price: Low to High</Link></li>
-                    <li><Link href={`/products?sortBy=price_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary">Price: High to Low</Link></li>
+                <h3 className="text-sm font-medium text-foreground mb-2 font-accent uppercase tracking-wider">Sort By</h3>
+                <ul className="space-y-1.5 text-sm">
+                    <li><Link href={`/products?sortBy=createdAt_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Newest</Link></li>
+                    <li><Link href={`/products?sortBy=price_asc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Price: Low to High</Link></li>
+                    <li><Link href={`/products?sortBy=price_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Price: High to Low</Link></li>
+                    <li><Link href={`/products?sortBy=rating_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Rating</Link></li>
                 </ul>
               </div>
             </div>
@@ -96,7 +96,7 @@ export default async function ProductsPage({ params, searchParams }: ProductsPag
               </p>
             </div>
           )}
-          {/* TODO: Implement full pagination */}
+          {/* TODO: Implement full pagination based on productsData.nextCursor or total count */}
         </main>
       </div>
     </div>

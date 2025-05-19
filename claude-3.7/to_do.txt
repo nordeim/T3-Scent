@@ -1,0 +1,9 @@
+*   **IMPORTANT:** You *must* 
+Help me to carefully convert the HEX/RGB colors from `sample_landing_page.html` to the `H S% L%` format (Hue Saturation Lightness, space-separated values without `hsl()` wrapper) for the CSS variables that Tailwind will consume (e.g., `--background`, `--primary`). I've provided examples based on the colors from `sample_landing_page.html` converted to HSL.
+
+**Action for you on `globals.css`:**
+*   **Convert the HEX/RGB colors** from `sample_landing_page.html` (like `--clr-bg`, `--clr-primary`, etc.) into the `H S% L%` string format.
+*   **Replace my placeholder HSL values** in the `:root` and `.dark` sections with your accurately converted HSL values. For example, if `--clr-bg: #f8f7f4;` from your HTML, find its HSL equivalent (e.g., `40 33% 97%`) and set `--background: 40 33% 97%;` in `:root`.
+
+**Crucially, ensure your `src/styles/globals.css` has the correct HSL triplet values** for all the CSS variables (like `--background`, `--primary`, `--font-body`, etc.) as detailed in my previous response. This is the most critical step for the theming and `bg-background` error to be resolved.
+

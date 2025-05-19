@@ -1,33 +1,41 @@
 // tailwind.config.ts
 import { type Config } from "tailwindcss";
-// Removed: import defaultTheme from "tailwindcss/defaultTheme"; 
-// We'll define fonts directly or use CSS variables set in globals.css
 
 export default {
-  darkMode: "class",
+  darkMode: "class", // Enables class-based dark mode (e.g., <html class="dark">)
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}", // For any remaining pages router files (e.g. API routes)
     "./src/components/**/*.{js,ts,jsx,tsx}",
-    "./src/app/**/*.{js,ts,jsx,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}", // Primary content source for App Router
   ],
   theme: {
     container: { 
       center: true,
-      padding: "1rem", 
-      screens: {
-        sm: "640px", md: "768px", lg: "1024px", xl: "1180px", "2xl": "1440px", // Adjusted container widths
+      padding: {
+        DEFAULT: "1rem", // Default padding for container
+        sm: "1.5rem",    // Padding for sm screens and up
+        lg: "2rem",      // Padding for lg screens and up
+      },
+      screens: { // Max-widths for container at different breakpoints
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1180px", // Custom container width from sample_landing_page
+        "2xl": "1440px",
       },
     },
     extend: {
-      colors: { // These now reference the CSS variables defined in globals.css
+      colors: { 
+        // These colors reference CSS variables defined in src/styles/globals.css
+        // The CSS variables MUST be defined in HSL format: <HUE> <SATURATION>% <LIGHTNESS>%
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        ring: "hsl(var(--ring))", // Used for focus rings
+        background: "hsl(var(--background))", // Main page background
+        foreground: "hsl(var(--foreground))", // Main text color
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          foreground: "hsl(var(--primary-foreground))", // Text color on primary background
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -41,7 +49,7 @@ export default {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: {
+        accent: { // Often used for CTAs or highlighted elements
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
@@ -53,38 +61,90 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Direct CSS variable usage from sample_landing_page.html if not using HSL for everything:
-        // 'html-bg': 'var(--clr-bg-html)',
-        // 'html-text': 'var(--clr-text-html)',
-        // 'html-primary': 'var(--clr-primary-html)',
-        // 'html-accent': 'var(--clr-accent-html)',
-        // 'html-cta': 'var(--clr-cta-html)',
       },
       borderRadius: {
-        lg: "var(--radius)",
+        lg: "var(--radius)", // e.g., 0.5rem
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        // Reference CSS variables defined in globals.css
-        sans: ["var(--font-body)", "ui-sans-serif", "system-ui"], // Montserrat as primary sans
-        serif: ["var(--font-head)", "ui-serif", "Georgia"],      // Cormorant Garamond as primary serif
-        accent: ["var(--font-accent)", "ui-sans-serif"],          // Raleway as accent font
+        // These reference CSS variables defined in src/styles/globals.css
+        // Fallback fonts (ui-serif, ui-sans-serif) are Tailwind's defaults
+        head: ["var(--font-head)", "ui-serif", "serif"],             // For headings (Cormorant Garamond)
+        body: ["var(--font-body)", "ui-sans-serif", "sans-serif"],   // For body text (Montserrat)
+        accent: ["var(--font-accent)", "ui-sans-serif", "sans-serif"], // For accent text (Raleway)
+        
+        // Make 'sans' (Tailwind's default sans-serif utility class prefix) use your body font
+        sans: ["var(--font-body)", "ui-sans-serif", "sans-serif"], 
       },
       keyframes: {
-        "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" }, },
-        "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" }, },
+        "accordion-down": { 
+          from: { height: "0px" }, // Use "0px" instead of "0" for height
+          to: { height: "var(--radix-accordion-content-height)" }, 
+        },
+        "accordion-up": { 
+          from: { height: "var(--radix-accordion-content-height)" }, 
+          to: { height: "0px" }, // Use "0px"
+        },
         fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
-        // ... other keyframes ...
-        shimmer: { "0%": { backgroundPosition: "-1000px 0" }, "100%": { backgroundPosition: "1000px 0" }, },
+        fadeOut: { "0%": { opacity: "1" }, "100%": { opacity: "0" } },
+        slideInRight: { "0%": { transform: "translateX(100%)", opacity: "0" }, "100%": { transform: "translateX(0)", opacity: "1" } },
+        slideInLeft: { "0%": { transform: "translateX(-100%)", opacity: "0" }, "100%": { transform: "translateX(0)", opacity: "1" } },
+        shimmer: { 
+          "0%": { backgroundPosition: "-1000px 0" }, 
+          "100%": { backgroundPosition: "1000px 0" }, 
+        },
+        // Add other keyframes from sample_landing_page.html if needed (ctaPulse, markerPulse)
+        // Example:
+        // ctaPulse: { 
+        //   "0%, 100%": { transform: "scale(1)", boxShadow: "0 8px 25px -5px rgba(var(--accent-rgb), 0.4)" }, // Assuming --accent-rgb is defined
+        //   "50%": { transform: "scale(1.03)", boxShadow: "0 10px 30px 0px rgba(var(--accent-rgb), 0.5)" }
+        // },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         fadeIn: "fadeIn 0.5s ease-in-out",
-        // ... other animations ...
+        fadeOut: "fadeOut 0.5s ease-in-out", // Added fadeOut
+        slideInRight: "slideInRight 0.5s ease-in-out",
+        slideInLeft: "slideInLeft 0.5s ease-in-out",
         shimmer: "shimmer 2s infinite linear",
+        // ctaPulse: "ctaPulse 2.8s infinite alternate cubic-bezier(0.68, -0.55, 0.27, 1.55)",
       },
+      // If using @tailwindcss/typography for prose styling:
+      typography: (theme: any) => ({
+        DEFAULT: {
+          css: {
+            color: 'hsl(var(--foreground))', // Base prose color
+            a: {
+              color: 'hsl(var(--primary))',
+              '&:hover': {
+                color: 'hsl(var(--accent))',
+              },
+            },
+            'h1, h2, h3, h4': {
+                fontFamily: 'var(--font-head)',
+                color: 'hsl(var(--foreground))', // Or text-primary
+            },
+            // ... other prose styles
+          },
+        },
+        invert: { // For dark mode prose
+            css: {
+                color: 'hsl(var(--foreground))', // Should use dark mode foreground
+                 a: {
+                    color: 'hsl(var(--primary))', // Dark mode primary
+                    '&:hover': {
+                        color: 'hsl(var(--accent))', // Dark mode accent
+                    },
+                },
+                'h1, h2, h3, h4': {
+                    fontFamily: 'var(--font-head)',
+                    color: 'hsl(var(--foreground))',
+                },
+            }
+        }
+      }),
     },
   },
   plugins: [

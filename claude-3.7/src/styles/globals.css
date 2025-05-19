@@ -4,145 +4,160 @@
 @tailwind utilities;
 
 /*
-  Imported Google Fonts via <link> in layout.tsx:
-  - Cormorant Garamond: For headings
-  - Montserrat: For body text
-  - Raleway: For accent text (e.g., navigation links, special buttons)
+  Google Fonts are imported via <link> tags in src/app/layout.tsx:
+  - Cormorant Garamond: var(--font-head)
+  - Montserrat: var(--font-body)
+  - Raleway: var(--font-accent)
 */
 
 @layer base {
   :root {
-    /* Fonts from sample_landing_page.html */
+    /* --- Font Variables (as defined in sample_landing_page.html) --- */
     --font-head: 'Cormorant Garamond', serif;
     --font-body: 'Montserrat', sans-serif;
     --font-accent: 'Raleway', sans-serif;
 
-    /* Base Colors from sample_landing_page.html (Light Mode) */
-    --clr-bg-html: #f8f7f4;         /* Page background */
-    --clr-bg-alt-html: #ffffff;     /* Card/contrast background */
-    --clr-text-html: #333d41;       /* Base text color */
-    --clr-primary-html: #2a7c8a;    /* Primary interactive elements */
-    --clr-accent-html: #e0a86f;     /* Secondary interactive/highlight */
-    --clr-cta-html: #ff7b4f;        /* Call to action buttons */
+    /* 
+      LIGHT MODE THEME - Shadcn/ui compatible HSL variables
+      --------------------------------------------------------------------
+      CRITICAL: The HSL values below MUST be in the format:
+      <HUE_value_0_to_360> <SATURATION_value_0_to_100>% <LIGHTNESS_value_0_to_100>%
+      Example: If your HTML's --clr-bg is #f8f7f4, convert it to HSL.
+               #f8f7f4 is approximately HSL(40, 33%, 97%).
+               So, you would write: --theme-bg-light: 40 33% 97%;
+      --------------------------------------------------------------------
+    */
+    /* Replace these with YOUR ACCURATE HSL conversions from sample_landing_page.html */
+    --theme-bg-light: 40 33% 97%;    /* e.g., for #f8f7f4 */
+    --theme-bg-alt-light: 0 0% 100%;  /* e.g., for #ffffff */
+    --theme-text-light: 202 13% 23%;  /* e.g., for #333d41 */
+    --theme-primary-light: 190 53% 35%; /* e.g., for #2a7c8a */
+    --theme-accent-light: 32 60% 66%;  /* e.g., for #e0a86f (sample's HTML accent) */
+    --theme-cta-light: 14 100% 65%;    /* e.g., for #ff7b4f (sample's HTML cta) */
+
+    /* --- Shadcn/ui style CSS Variables (Light Mode) - These consume the --theme-* vars --- */
+    --background: var(--theme-bg-light);
+    --foreground: var(--theme-text-light);
     
-    /* Mapping to Shadcn/ui style CSS variables (using HSL values) */
-    /* You'll need to convert your hex/rgb colors to HSL for this system */
-    /* Or, modify tailwind.config.ts to use var(--clr-...) directly */
+    --card: var(--theme-bg-alt-light);
+    --card-foreground: var(--theme-text-light);
 
-    /* Example HSL mappings (CONVERT YOUR HEX TO HSL - e.g., using an online tool) */
-    /* --clr-bg-html: #f8f7f4 -> approx HSL: 40 33% 97% */
-    --background: 40 33% 97%;
-    /* --clr-bg-alt-html: #ffffff -> HSL: 0 0% 100% */
-    --card: 0 0% 100%; /* For card backgrounds */
-    --popover: 0 0% 100%;
-    /* --clr-text-html: #333d41 -> approx HSL: 200 11% 23% */
-    --foreground: 200 11% 23%;
+    --popover: var(--theme-bg-alt-light);
+    --popover-foreground: var(--theme-text-light);
+
+    --primary: var(--theme-primary-light);
+    --primary-foreground: 0 0% 100%;         /* White text on primary */
     
-    /* --clr-primary-html: #2a7c8a -> approx HSL: 190 53% 35% */
-    --primary: 190 53% 35%;
-    --primary-foreground: 40 33% 97%; /* Text on primary (e.g. white) */
-    
-    /* --clr-accent-html: #e0a86f -> approx HSL: 32 60% 66% */
-    --secondary: 32 60% 66%; /* Using sample's accent as secondary */
-    --secondary-foreground: 200 11% 23%; /* Text on secondary (e.g. dark) */
+    --secondary: var(--theme-accent-light);     
+    --secondary-foreground: 200 11% 18%;     
 
-    /* --clr-cta-html: #ff7b4f -> approx HSL: 14 100% 65% */
-    --accent: 14 100% 65%; /* Using sample's CTA as accent for Shadcn */
-    --accent-foreground: 0 0% 100%; /* Text on accent (e.g. white) */
+    --muted: 210 40% 96.1%; /* Can also be derived from your theme or kept generic */
+    --muted-foreground: 215 20% 55%; 
 
-    --muted: 210 40% 96.1%; /* Default Shadcn light muted */
-    --muted-foreground: 215.4 16.3% 46.9%; /* Default Shadcn light muted-foreground */
-    
-    --destructive: 0 84.2% 60.2%; /* Default Shadcn destructive */
-    --destructive-foreground: 210 40% 98%;
+    --accent: var(--theme-cta-light);           
+    --accent-foreground: 0 0% 100%;          
 
-    --border: 214.3 31.8% 91.4%; /* Default Shadcn light border */
-    --input: 214.3 31.8% 91.4%;  /* Default Shadcn light input */
-    --ring: 190 53% 35%;         /* Default Shadcn light ring (primary color) */
+    --destructive: 0 84% 60%; /* Keep generic or theme if available */
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem; /* Consistent border radius */
+    --border: 214 32% 90%; 
+    --input: 214 32% 90%;  
+    --ring: var(--primary); 
+
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* Dark Mode Colors from sample_landing_page.html */
-    --clr-bg-dark-html: #1a202c;
-    --clr-bg-alt-dark-html: #2d3748;
-    --clr-text-dark-html: #e2e8f0;
-    --clr-primary-dark-html: #4fd1c5;
-    --clr-accent-dark-html: #f6ad55;
-    --clr-cta-dark-html: #ff8c69;
+    /* 
+      DARK MODE THEME - Shadcn/ui compatible HSL variables
+      --------------------------------------------------------------------
+      CRITICAL: Replace these HSL values with ACCURATE HSL conversions
+      from your --clr-*-dark variables in sample_landing_page.html.
+      Format: <HUE_value> <SATURATION_value>% <LIGHTNESS_value>%
+      --------------------------------------------------------------------
+    */
+    /* Replace these with YOUR ACCURATE HSL conversions */
+    --theme-bg-dark: 215 28% 14%;      /* e.g., for #1a202c */
+    --theme-bg-alt-dark: 215 25% 23%;  /* e.g., for #2d3748 */
+    --theme-text-dark: 215 28% 90%;    /* e.g., for #e2e8f0 */
+    --theme-primary-dark: 175 56% 57%; /* e.g., for #4fd1c5 */
+    --theme-accent-dark: 36 90% 65%;   /* e.g., for #f6ad55 */
+    --theme-cta-dark: 15 100% 71%;     /* e.g., for #ff8c69 */
 
-    /* Mapping to Shadcn/ui style CSS variables for dark mode */
-    /* --clr-bg-dark-html: #1a202c -> approx HSL: 215 28% 14% */
-    --background: 215 28% 14%;
-    /* --clr-bg-alt-dark-html: #2d3748 -> HSL: 215 25% 23% */
-    --card: 215 25% 23%;
-    --popover: 215 25% 23%;
-    /* --clr-text-dark-html: #e2e8f0 -> HSL: 215 28% 90% */
-    --foreground: 215 28% 90%;
+    /* --- Shadcn/ui style CSS Variables (Dark Mode) --- */
+    --background: var(--theme-bg-dark);
+    --foreground: var(--theme-text-dark);
+
+    --card: var(--theme-bg-alt-dark);
+    --card-foreground: var(--theme-text-dark);
+
+    --popover: var(--theme-bg-alt-dark);
+    --popover-foreground: var(--theme-text-dark);
+
+    --primary: var(--theme-primary-dark);
+    --primary-foreground: 215 28% 10%; 
     
-    /* --clr-primary-dark-html: #4fd1c5 -> HSL: 175 56% 57% */
-    --primary: 175 56% 57%;
-    --primary-foreground: 215 28% 14%; /* Text on primary (e.g. dark) */
+    --secondary: var(--theme-accent-dark);
+    --secondary-foreground: 215 28% 10%; 
+
+    --muted: 217 33% 20%; 
+    --muted-foreground: 215 20% 65%; 
     
-    /* --clr-accent-dark-html: #f6ad55 -> HSL: 36 90% 65% */
-    --secondary: 36 90% 65%;
-    --secondary-foreground: 215 28% 14%; /* Text on secondary (e.g. dark) */
+    --accent: var(--theme-cta-dark);
+    --accent-foreground: 215 28% 10%; 
 
-    /* --clr-cta-dark-html: #ff8c69 -> HSL: 15 100% 71% */
-    --accent: 15 100% 71%;
-    --accent-foreground: 215 28% 14%; /* Text on accent (e.g. dark) */
+    --destructive: 0 70% 40%; 
+    --destructive-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%; /* Default Shadcn dark muted */
-    --muted-foreground: 215 20.2% 65.1%; /* Default Shadcn dark muted-foreground */
-    
-    --destructive: 0 62.8% 30.6%; /* Default Shadcn dark destructive */
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%; /* Default Shadcn dark border */
-    --input: 217.2 32.6% 17.5%;  /* Default Shadcn dark input */
-    --ring: 175 56% 57%;         /* Default Shadcn dark ring (primary color) */
+    --border: 217 33% 28%; 
+    --input: 217 33% 28%;  
+    --ring: var(--primary);
   }
 }
 
 @layer base {
+  * {
+    @apply border-border; 
+  }
+  html {
+    @apply scroll-smooth;
+    font-family: var(--font-body);
+    color: hsl(var(--foreground)); /* Use hsl() here for direct application */
+    background-color: hsl(var(--background)); /* Use hsl() here */
+  }
   body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-body); /* Use Montserrat for body */
     line-height: 1.7;
-    min-height: 100vh;
-    transition-property: background-color, color;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms; /* Smoother transition from sample */
-    overflow-x: hidden;
+    min-height: 100dvh; 
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex; 
+    flex-direction: column; 
+    @apply bg-background text-foreground; /* Also apply Tailwind classes */
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-head); /* Use Cormorant Garamond */
-    @apply font-bold tracking-wide text-primary; /* Tailwind classes for color */
-    line-height: 1.2;
+    font-family: var(--font-head); 
+    @apply font-bold tracking-tight text-foreground; 
+    line-height: 1.25; 
     margin-bottom: 0.75em;
   }
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-     @apply text-primary; /* Primary color in dark mode from vars should be lighter */
-     /* Or use a specific dark heading color: color: var(--clr-primary-dark-html); */
-  }
-  /* Specific heading sizes if needed beyond Tailwind's defaults */
-  h1 { @apply text-4xl md:text-5xl; }
-  h2 { @apply text-3xl md:text-4xl; }
-  h3 { @apply text-2xl md:text-3xl; }
+  /* To specifically use your HTML primary color for headings: */
+  /* h1, h2, h3, h4, h5, h6 { color: var(--clr-primary-html); } */
+  /* .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: var(--clr-primary-dark-html); } */
 
 
   a {
-    @apply text-primary transition-colors duration-300;
-    text-decoration: none;
+    @apply text-primary transition-colors duration-200 ease-in-out;
   }
   a:hover {
-    @apply text-accent; /* Using accent for link hover as per sample */
-    opacity: 0.9;
+    /* Use the CTA color from sample_landing_page for link hover if desired */
+    /* color: var(--clr-cta-html); */
+    /* For dark mode: */
+    /* .dark & { color: var(--clr-cta-dark-html); } */
+    @apply text-accent opacity-90; /* Current setup uses Shadcn 'accent' */
   }
   a:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 rounded-sm;
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background rounded-sm;
   }
-  /* Dark mode link colors will be handled by text-primary and text-accent variables */
 }
