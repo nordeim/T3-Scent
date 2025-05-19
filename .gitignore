@@ -1,5 +1,8 @@
 /.phpunit.cache
 /node_modules
+/o4-mini/node_modules
+/next-14/node_modules
+/next-15/node_modules
 /apache_logs
 /public/build
 /public/hot
