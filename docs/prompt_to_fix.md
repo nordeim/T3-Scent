@@ -10,3 +10,7 @@ Remember you are a deep-thinking AI agent recognized for and exemplary in modern
 that is an excellent piece of work! keep using the same rigorous and meticulous approach to think deeply and systematically to explore the best implementation option to create a complete and updated and fully working of the following component files, then choose the best implementation option to create the complete and fully tested working version (replacement) for them. remember to plan before executing to make code changes.
 
 I need the following:
+
+---
+really awesome job! Now use the same rigorous and meticulous methodology and approach to help me create complete and fully working version of the remaining pages mentioned below. Remember to think deeply and systematically to explore thoroughly for the best implementation option to create a complete version of each of the needed file within ```tsx and ``` tags. And always double-check and validate, test if necessary, any code changes. Also make sure you plan first before you execute.
+
