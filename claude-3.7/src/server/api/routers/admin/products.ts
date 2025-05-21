@@ -23,7 +23,7 @@ const ProductInputSchema = z.object({
   lowStockThreshold: z.number().int().min(0).optional().default(5),
   categoryIds: z.array(z.string()).optional().default([]),
   tagIds: z.array(z.string()).optional().default([]),
-  collectionIds: z.array(z.string()).optional().default([]), // Added for collections
+  collectionIds: z.array(z.string()).optional().default([]),
   metaTitle: z.string().nullable().optional(),
   metaDescription: z.string().nullable().optional(),
   inStock: z.boolean().optional().default(true),
@@ -32,10 +32,8 @@ const ProductInputSchema = z.object({
   isNew: z.boolean().optional().default(false),
   onSale: z.boolean().optional().default(false),
   saleEndDate: z.date().nullable().optional(),
-  publishedAt: z.date().nullable().optional(), // For scheduling publication
+  publishedAt: z.date().nullable().optional(),
   modelUrl: z.string().url().nullable().optional(),
-  // variants: ProductVariantInputSchema[] - This needs to be handled carefully, Prisma doesn't support nested create/update of relations in one go for complex cases easily.
-  // images: ProductImageInputSchema[] - Similar to variants, image handling is complex.
 });
 
 export const adminProductsRouter = createTRPCRouter({
@@ -49,11 +47,10 @@ export const adminProductsRouter = createTRPCRouter({
         collectionId: z.string().optional(),
         stockStatus: z.enum(["in_stock", "low_stock", "out_of_stock"]).optional(),
         publishStatus: z.enum(["published", "draft", "scheduled"]).optional(),
-        sortBy: z.string().optional().default("createdAt_desc"), // e.g., "name_asc", "price_desc"
+        sortBy: z.string().optional().default("createdAt_desc"),
     }))
     .query(async ({ ctx, input }) => {
-        // Placeholder for fetching paginated admin product list
-        const { limit, cursor, search, categoryId, stockStatus, publishStatus, sortBy } = input;
+        const { limit, cursor, search, categoryId, tagId, collectionId, stockStatus, publishStatus, sortBy } = input;
         
         const where: Prisma.ProductWhereInput = {};
         if (search) {
@@ -63,20 +60,36 @@ export const adminProductsRouter = createTRPCRouter({
             ];
         }
         if (categoryId) where.categories = { some: { id: categoryId } };
-        if (stockStatus === "out_of_stock") where.stockQuantity = { lte: 0 };
-        else if (stockStatus === "low_stock") where.AND = [ {stockQuantity: { gt: 0 }}, { stockQuantity: { lte: prisma.product.fields.lowStockThreshold }} ]; // This needs a more complex query or raw SQL
-        else if (stockStatus === "in_stock") where.stockQuantity = { gt: prisma.product.fields.lowStockThreshold }; // or gt: 0 if lowStockThreshold is not always set
+        if (tagId) where.tags = { some: { id: tagId }};
+        if (collectionId) where.collections = { some: { id: collectionId }};
+
+        // Corrected stockStatus logic
+        if (stockStatus === "out_of_stock") {
+            where.stockQuantity = { lte: 0 };
+        } else if (stockStatus === "low_stock") {
+            // This assumes 'low stock' means stock is positive but at or below a certain threshold.
+            // Prisma cannot directly compare product.stockQuantity with product.lowStockThreshold in a WHERE clause.
+            // A common simplification is to use a fixed value for "low" or filter in application code after fetching.
+            // Here, we use a fixed threshold (e.g., 10) as an example.
+            where.AND = [
+                { stockQuantity: { gt: 0 } }, 
+                { stockQuantity: { lte: 10 } } // Example fixed low stock threshold
+            ];
+        } else if (stockStatus === "in_stock") {
+             where.stockQuantity = { gt: 10 }; // Example: stock greater than the fixed low stock threshold
+        }
 
         if (publishStatus === "published") where.publishedAt = { not: null, lte: new Date() };
         else if (publishStatus === "draft") where.publishedAt = null;
-        // else if (publishStatus === "scheduled") where.publishedAt = { gt: new Date() };
+        else if (publishStatus === "scheduled") where.publishedAt = { gt: new Date() };
         
-        // Basic sorting, more complex sort needed for variants or computed fields
         const orderBy: Prisma.ProductOrderByWithRelationInput = {};
         if (sortBy === 'name_asc') orderBy.name = 'asc';
         else if (sortBy === 'name_desc') orderBy.name = 'desc';
         else if (sortBy === 'price_asc') orderBy.price = 'asc';
         else if (sortBy === 'price_desc') orderBy.price = 'desc';
+        else if (sortBy === 'stockQuantity_asc') orderBy.stockQuantity = 'asc';
+        else if (sortBy === 'stockQuantity_desc') orderBy.stockQuantity = 'desc';
         else orderBy.createdAt = 'desc';
 
         const products = await ctx.db.product.findMany({
@@ -97,7 +110,6 @@ export const adminProductsRouter = createTRPCRouter({
             nextCursor = nextItem?.id;
         }
         
-        // Convert Decimals
         return {
             items: products.map(p => ({
                 ...p,
@@ -117,16 +129,15 @@ export const adminProductsRouter = createTRPCRouter({
         where: { id: input.id },
         include: {
           images: { orderBy: { position: 'asc' } },
-          categories: { select: { id: true } }, // For multi-select, just need IDs
-          tags: { select: { id: true } },       // For multi-select, just need IDs
-          collections: { select: { id: true } }, // For multi-select
+          categories: { select: { id: true } }, 
+          tags: { select: { id: true } },       
+          collections: { select: { id: true } }, 
           variants: { orderBy: [{ isDefault: 'desc' }, { name: 'asc' }] },
         },
       });
       if (!product) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Product not found" });
       }
-      // Convert Decimals
       return {
         ...product,
         price: parseFloat(product.price.toString()),
@@ -137,11 +148,10 @@ export const adminProductsRouter = createTRPCRouter({
     }),
 
   createProduct: adminProcedure
-    .input(ProductInputSchema.omit({ variants: true, images: true })) // Handle variants/images separately
+    .input(ProductInputSchema) 
     .mutation(async ({ ctx, input }) => {
       const { categoryIds, tagIds, collectionIds, ...productData } = input;
       
-      // Check for slug uniqueness
       const existingSlug = await ctx.db.product.findUnique({ where: { slug: productData.slug } });
       if (existingSlug) {
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Slug already exists. Please choose a unique slug.' });
@@ -153,18 +163,16 @@ export const adminProductsRouter = createTRPCRouter({
           categories: { connect: categoryIds.map(id => ({ id })) },
           tags: { connect: tagIds.map(id => ({ id })) },
           collections: { connect: collectionIds?.map(id => ({ id })) },
-          // Image and Variant creation would be more complex, often multi-step or separate procedures
         },
       });
       return product;
     }),
 
   updateProduct: adminProcedure
-    .input(ProductInputSchema.extend({ id: z.string() }).omit({ variants: true, images: true }))
+    .input(ProductInputSchema.extend({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { id, categoryIds, tagIds, collectionIds, ...productData } = input;
 
-      // Check for slug uniqueness if changed
       if (productData.slug) {
           const existingSlug = await ctx.db.product.findFirst({ where: { slug: productData.slug, NOT: { id } } });
           if (existingSlug) {
@@ -172,8 +180,6 @@ export const adminProductsRouter = createTRPCRouter({
           }
       }
 
-      // Handle relations for categories, tags, collections
-      // This needs to disconnect old ones and connect new ones if not using set
       const product = await ctx.db.product.update({
         where: { id },
         data: {
@@ -181,8 +187,6 @@ export const adminProductsRouter = createTRPCRouter({
           categories: { set: categoryIds.map(id => ({ id })) },
           tags: { set: tagIds.map(id => ({ id })) },
           collections: { set: collectionIds?.map(id => ({ id })) },
-          // Image and Variant updates are complex.
-          // Usually involves deleting old ones not in new list, updating existing, creating new.
         },
       });
       return product;
@@ -191,25 +195,30 @@ export const adminProductsRouter = createTRPCRouter({
   deleteProduct: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // Add checks: e.g., ensure product is not in active orders or subscriptions before deletion, or handle cascading effects.
-      // For now, a simple delete:
       try {
         await ctx.db.product.delete({ where: { id: input.id } });
         return { success: true, message: "Product deleted successfully." };
       } catch (error) {
-          if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') { // Foreign key constraint
-              throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot delete product. It is referenced in orders or other records.'});
+          if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2003') { 
+              throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot delete product. It is referenced in orders or other essential records.'});
+            }
+            if (error.code === 'P2025') {
+              throw new TRPCError({ code: 'NOT_FOUND', message: 'Product not found for deletion.' });
+            }
           }
+          console.error("Error deleting product:", error);
           throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to delete product.' });
       }
     }),
     
-    // Procedures for categories, tags, collections
     getAllCategories: adminProcedure.query(async ({ctx}) => {
         return ctx.db.category.findMany({orderBy: {name: 'asc'}});
     }),
     getAllTags: adminProcedure.query(async ({ctx}) => {
         return ctx.db.tag.findMany({orderBy: {name: 'asc'}});
     }),
-    // ... add more admin procedures for product related entities if needed
+    getAllCollections: adminProcedure.query(async ({ctx}) => {
+        return ctx.db.collection.findMany({orderBy: {name: 'asc'}});
+    }),
 });

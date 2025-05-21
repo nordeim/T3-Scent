@@ -11,7 +11,8 @@ import { subscriptionsRouter } from "~/server/api/routers/subscriptions";
 import { loyaltyRouter } from "~/server/api/routers/loyalty"; 
 import { smartHomeRouter } from "~/server/api/routers/smartHome"; 
 import { notificationsRouter } from "~/server/api/routers/notifications"; 
-import { newsletterRouter } from "~/server/api/routers/newsletter"; // IMPORT THE NEW ROUTER
+import { newsletterRouter } from "~/server/api/routers/newsletter";
+import { postRouter } from "~/server/api/routers/post"; // Added postRouter
 
 import { adminProductsRouter } from "~/server/api/routers/admin/products";
 import { adminOrdersRouter } from "~/server/api/routers/admin/orders";
@@ -34,7 +35,8 @@ export const appRouter = createTRPCRouter({
   loyalty: loyaltyRouter,
   smartHome: smartHomeRouter,
   notifications: notificationsRouter,
-  newsletter: newsletterRouter, // ADD THE ROUTER HERE
+  newsletter: newsletterRouter,
+  post: postRouter, // Ensured postRouter is included
 
   // Admin-specific routers nested under 'admin'
   admin: createTRPCRouter({

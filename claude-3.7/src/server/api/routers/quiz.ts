@@ -3,12 +3,13 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { 
     type QuizQuestion as PrismaQuizQuestion, 
-    QuizQuestionType as PrismaQuizQuestionType 
+    QuizQuestionType as PrismaQuizQuestionType,
+    type Prisma 
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 const ZodQuizOptionSchema = z.object({
-  id: z.string(), // Expecting client to generate unique IDs for options within a question
+  id: z.string(),
   label: z.string(),
   description: z.string().optional(),
   imageUrl: z.string().url().optional(),
@@ -20,9 +21,6 @@ type AdvancedQuizQuestionOption = z.infer<typeof ZodQuizOptionSchema>;
 export interface AdvancedQuizQuestionClient extends Omit<PrismaQuizQuestion, 'options' | 'type' | 'createdAt' | 'updatedAt'> {
   type: "single" | "multiple"; 
   options: AdvancedQuizQuestionOption[];
-  // Dates can be string if serialized, or Date if used directly server-side for some reason
-  // createdAt: string; 
-  // updatedAt: string;
 }
 
 function mapPrismaQuestionTypeToClientType(prismaType: PrismaQuizQuestionType): "single" | "multiple" {
@@ -38,8 +36,8 @@ function mapPrismaQuestionTypeToClientType(prismaType: PrismaQuizQuestionType): 
       console.warn(`QuizQuestionType.TEXT_INPUT ('${prismaType}') mapped to 'single'. Client needs specific handling.`);
       return "single"; 
     default:
-      const exhaustiveCheck: never = prismaType;
-      console.warn(`Unknown PrismaQuizQuestionType: ${exhaustiveCheck} mapped to 'single'.`);
+      // const exhaustiveCheck: never = prismaType; // This causes type error if not all enum values are handled
+      console.warn(`Unknown PrismaQuizQuestionType: ${prismaType as string} mapped to 'single'.`);
       return "single"; 
   }
 }
@@ -48,34 +46,30 @@ export const quizRouter = createTRPCRouter({
   getAdvancedQuizQuestions: publicProcedure
     .query(async ({ ctx }): Promise<AdvancedQuizQuestionClient[]> => {
       try {
-        console.log("Fetching advanced quiz questions from DB...");
         const questionsFromDb = await ctx.db.quizQuestion.findMany({
           orderBy: { order: 'asc' },
         });
 
         if (questionsFromDb.length === 0) {
-            console.log("No quiz questions found in the database.");
             return [];
         }
         
-        console.log(`Found ${questionsFromDb.length} questions, transforming...`);
-
-        return questionsFromDb.map(q => {
+        return questionsFromDb.map((q, index) => {
           let parsedOptions: AdvancedQuizQuestionOption[] = [];
-          if (q.options && typeof q.options === 'object' && !Array.isArray(q.options) && Object.keys(q.options).length === 0 && Array.isArray((q.options as any).values)) {
-             // Handle cases where Prisma might return { type: 'Json', values: [...] }
-             // This is speculative, Prisma usually returns the direct array for JSONB.
-             console.warn("Correcting options structure for question ID:", q.id);
-             parsedOptions = (q.options as any).values as AdvancedQuizQuestionOption[];
-          } else if (Array.isArray(q.options)) {
-            const optionsValidation = z.array(ZodQuizOptionSchema).safeParse(q.options);
-            if (optionsValidation.success) {
-              parsedOptions = optionsValidation.data;
-            } else {
-              console.error(`Invalid options JSON structure for QuizQuestion ID ${q.id}:`, optionsValidation.error.flatten().fieldErrors);
+          try {
+            if (q.options && Array.isArray(q.options)) {
+              const optionsValidation = z.array(ZodQuizOptionSchema).safeParse(q.options);
+              if (optionsValidation.success) {
+                parsedOptions = optionsValidation.data;
+              } else {
+                console.error(`[QuizRouter] Invalid options JSON structure for QuizQuestion ID ${q.id} (DB index ${index}):`, optionsValidation.error.flatten().fieldErrors, "Raw options:", JSON.stringify(q.options).substring(0, 200));
+              }
+            } else if (q.options) { // Not an array but exists
+                 console.error(`[QuizRouter] Options for QuizQuestion ID ${q.id} (DB index ${index}) is not an array:`, typeof q.options, JSON.stringify(q.options).substring(0,200));
             }
-          } else {
-            console.error(`Options for QuizQuestion ID ${q.id} is not an array or expected structure:`, q.options);
+            // If q.options is null/undefined, parsedOptions remains [] which is acceptable.
+          } catch (parseError) {
+             console.error(`[QuizRouter] Critical error parsing options for QuizQuestion ID ${q.id} (DB index ${index}):`, parseError, "Raw options:", JSON.stringify(q.options).substring(0, 200));
           }
           
           return {
@@ -90,7 +84,7 @@ export const quizRouter = createTRPCRouter({
           };
         });
       } catch (error) {
-        console.error("Failed to fetch or transform advanced quiz questions:", error);
+        console.error("[QuizRouter] Failed to fetch or transform advanced quiz questions:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Could not load quiz questions.",
@@ -103,7 +97,7 @@ export const quizRouter = createTRPCRouter({
     .input(z.object({
       responses: z.array(
         z.object({
-          questionId: z.string().cuid(),
+          questionId: z.string(), // Changed from .cuid()
           answer: z.array(z.string()), 
         })
       ).min(1, "At least one response is required."),
@@ -122,7 +116,7 @@ export const quizRouter = createTRPCRouter({
       try {
         const createdResponsesData = input.responses.map(response => ({
             questionId: response.questionId,
-            answer: response.answer, // Prisma expects Json type
+            answer: response.answer, 
             userId: userId, 
             sessionId: userId ? undefined : input.sessionId, 
         }));
@@ -130,8 +124,6 @@ export const quizRouter = createTRPCRouter({
         await ctx.db.quizResponse.createMany({
           data: createdResponsesData,
         });
-        
-        console.log(`Stored ${input.responses.length} quiz responses for ${userId ? `user ${userId}` : `session ${input.sessionId ?? 'unknown'}`}`);
         
         return { 
           success: true, 
@@ -145,7 +137,7 @@ export const quizRouter = createTRPCRouter({
           if (error.code === 'P2003') { 
             throw new TRPCError({
               code: "BAD_REQUEST",
-              message: "Invalid question ID provided in responses.",
+              message: "Invalid question ID provided in responses. Please ensure questions exist.",
               cause: error,
             });
           }

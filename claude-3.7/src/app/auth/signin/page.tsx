@@ -15,14 +15,10 @@ interface SignInPageProps {
   };
 }
 
-export default function SignInPage({ searchParams }: SignInPageProps) {
+export default async function SignInPage({ searchParams }: SignInPageProps) {
   // Access searchParams properties at the beginning of the function
   const error = searchParams?.error;
   const callbackUrl = searchParams?.callbackUrl;
-
-  // Any async operations (if this page had them) would come after accessing props.
-  // For example:
-  // const someServerData = await someAsyncFunction(); 
 
   return (
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-muted/30 px-4 py-12 sm:px-6 lg:px-8 dark:bg-background">
@@ -41,7 +37,6 @@ export default function SignInPage({ searchParams }: SignInPageProps) {
             </Link>
           </p>
         </div>
-        {/* Pass the resolved/accessed props */}
         <SignInFormClient error={error} callbackUrl={callbackUrl} />
       </div>
     </div>

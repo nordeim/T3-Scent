@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ProductGrid } from "~/components/products/ProductGrid";
 import { createServerActionClient } from "~/trpc/server";
 import { env } from "~/env.js";
-import { Button } from "~/components/ui/Button";
 
 interface CollectionPageProps {
   params: { slug: string };
@@ -16,18 +15,7 @@ interface CollectionPageProps {
 }
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
-  // Access params at the beginning
   const slug = params.slug; 
-  
-  const serverApi = await createServerActionClient(); // Create client after accessing params
-
-  // Placeholder: Fetch actual collection details for metadata
-  // const collectionDetails = await serverApi.collections.getBySlug({ slug }); // Corrected: No .query()
-  // if (!collectionDetails) {
-  //   return { title: "Collection Not Found" };
-  // }
-  // const title = `${collectionDetails.name} Collection - The Scent`;
-  // const description = collectionDetails.description || `Explore products from our ${collectionDetails.name} collection.`;
   
   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   const title = `${collectionNameFromSlug} Collection - The Scent`;
@@ -41,50 +29,43 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
       title,
       description,
       url: `${env.NEXT_PUBLIC_SITE_URL}/collections/${slug}`,
-      // images: [collectionDetails?.imageUrl || '/images/og-default.jpg'],
     },
   };
 }
 
 export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
-  // Access params and searchParams at the beginning
   const slug = params.slug; 
   const pageParam = searchParams?.page; 
   const sortByParam = searchParams?.sortBy;
 
-  const serverApi = await createServerActionClient(); // Create client after accessing props
+  const serverApi = await createServerActionClient();
   
-  const currentPage = parseInt(pageParam || "1");
+  // const currentPage = parseInt(pageParam || "1"); // Not used in current API call
   const limit = 12; 
 
   let productsData;
   let collectionName = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   let collectionDescription = `Browse through the finest items in our ${collectionName} selection.`;
 
-  // Placeholder for fetching collection details
+  // Placeholder: If you have a `serverApi.collections.getBySlug` procedure, you could use it here.
   // try {
-  //   const collectionDetails = await serverApi.collections.getBySlug({ slug }); // Corrected: No .query()
+  //   const collectionDetails = await serverApi.collections.getBySlug({ slug }); 
   //   if (!collectionDetails) notFound();
   //   collectionName = collectionDetails.name;
   //   collectionDescription = collectionDetails.description || collectionDescription;
   // } catch (error) {
   //   console.error(`Error fetching collection details for ${slug}:`, error);
+  //   // Handle error, potentially call notFound()
   // }
 
   try {
-    // CORRECTED: Removed .query()
     productsData = await serverApi.products.getAll({
       collectionSlug: slug,
       limit,
-      // sortBy: sortByParam as any,
+      sortBy: sortByParam as any,
     });
   } catch (error) {
     console.error(`Error fetching products for collection ${slug}:`, error);
-    if (error instanceof Error && 'shape' in error && (error as any).shape?.data?.code === 'NOT_FOUND') {
-        console.warn(`No procedure found for products.getAll with collectionSlug ${slug}. Ensure router is correct.`);
-    } else if (error instanceof Error && 'shape' in error) { 
-        console.error("TRPC Error Shape:", (error as any).shape);
-    }
     productsData = { items: [], nextCursor: undefined }; 
   }
 
@@ -104,6 +85,11 @@ export default async function CollectionPage({ params, searchParams }: Collectio
             <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                 <h2 className="text-xl font-semibold text-foreground mb-4">Refine This Collection</h2>
                 <p className="text-sm text-muted-foreground">(Filters specific to this collection - Placeholder)</p>
+                 <ul className="space-y-1.5 text-sm mt-4">
+                    <li><Link href={`/collections/${slug}?sortBy=createdAt_desc`} className="text-muted-foreground hover:text-primary transition-colors">Newest</Link></li>
+                    <li><Link href={`/collections/${slug}?sortBy=price_asc`} className="text-muted-foreground hover:text-primary transition-colors">Price: Low to High</Link></li>
+                    <li><Link href={`/collections/${slug}?sortBy=price_desc`} className="text-muted-foreground hover:text-primary transition-colors">Price: High to Low</Link></li>
+                </ul>
             </div>
         </aside>
         <main className="lg:col-span-3">

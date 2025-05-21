@@ -1,7 +1,7 @@
 // src/app/gift-cards/page.tsx
 import { type Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link"; // <<<<----- CORRECTED: Added this import
+import Link from "next/link"; // Ensured Link is imported
 import { Button } from "~/components/ui/Button"; 
 
 export const metadata: Metadata = {
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 export default function GiftCardsPage() {
   const giftCardOptions = [
-    // Ensure these image paths will exist in your /public/images/ directory
+    // NOTE: For these images to load, ensure files like 'public/images/gift_card_25.jpg' exist.
+    // If they are missing, you will see 404 errors for these images.
     { amount: 25, imageUrl: "/images/gift_card_25.jpg", altText: "A beautifully designed $25 The Scent gift card" }, 
     { amount: 50, imageUrl: "/images/gift_card_50.jpg", altText: "A beautifully designed $50 The Scent gift card" },
     { amount: 100, imageUrl: "/images/gift_card_100.jpg", altText: "A beautifully designed $100 The Scent gift card" },
@@ -32,7 +33,7 @@ export default function GiftCardsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {giftCardOptions.map((option) => (
           <div key={option.amount} className="rounded-lg border border-border bg-card text-card-foreground shadow-sm overflow-hidden flex flex-col group transition-all hover:shadow-xl hover:transform hover:-translate-y-1">
-            <div className="relative aspect-video w-full overflow-hidden"> {/* Added overflow-hidden */}
+            <div className="relative aspect-video w-full overflow-hidden">
               <Image 
                 src={option.imageUrl} 
                 alt={option.altText} 

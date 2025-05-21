@@ -4,10 +4,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useState } from "react";
-import { FaBars, FaTimes, FaShoppingCart, FaUserCircle, FaMoon, FaSun } from "react-icons/fa"; // Added FaMoon, FaSun for ThemeToggle
+import { useState, type ReactNode } from "react";
+import { FaBars, FaTimes, FaShoppingCart, FaUserCircle, FaMoon, FaSun, FaSignOutAlt } from "react-icons/fa";
 import { Button } from "~/components/ui/Button";
-import { ThemeToggle } from "~/components/ui/ThemeToggle"; // Using the dedicated component
+import { ThemeToggle } from "~/components/ui/ThemeToggle";
 import { useCart } from "~/contexts/CartContext";
 import { cn } from "~/lib/utils";
 
@@ -17,10 +17,16 @@ const mainNavLinks = [
   { href: "/collections/diffusers", label: "Diffusers" },
   { href: "/quiz", label: "Scent Quiz" },
   { href: "/about", label: "About Us" },
-  { href: "/contact", label: "Contact"}, // Added Contact from footer
+  { href: "/contact", label: "Contact"},
 ];
 
-const userNavLinks = [
+interface UserNavLink {
+    href: string;
+    label: string;
+    icon?: ReactNode;
+}
+
+const userNavLinks: UserNavLink[] = [
     { href: "/account/profile", label: "My Profile" },
     { href: "/account/orders", label: "My Orders" },
     { href: "/account/subscriptions", label: "My Subscriptions" },
@@ -30,28 +36,26 @@ const userNavLinks = [
 
 export const Navbar = () => {
   const { data: session, status } = useSession();
-  const { itemCount: cartItemCount, toggleCart } = useCart(); // Assuming toggleCart opens cart sidebar/modal
+  const { itemCount: cartItemCount, toggleCart } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background/80 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 dark:bg-card/80 dark:border-border/30">
-      <div className="container flex h-16 items-center sm:h-20"> {/* Slightly taller navbar */}
-        {/* Mobile Menu Toggle */}
+      <div className="container flex h-16 items-center sm:h-20">
         <div className="mr-4 md:hidden">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle mobile menu">
             {isMobileMenuOpen ? <FaTimes className="h-5 w-5" /> : <FaBars className="h-5 w-5" />}
           </Button>
         </div>
 
-        {/* Logo / Brand Name */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center space-x-2" onClick={() => isMobileMenuOpen && setIsMobileMenuOpen(false)}>
-            {/* <Image src="/logo.png" alt="The Scent Logo" width={36} height={36} /> */}
+          <Link href="/" className="flex items-center space-x-2" onClick={closeMobileMenu}>
             <span className="text-2xl font-bold text-foreground font-head">The Scent</span>
           </Link>
         </div>
 
-        {/* Desktop Navigation - Centered */}
         <nav className="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-8 text-sm">
           {mainNavLinks.map((link) => (
             <Link
@@ -64,8 +68,7 @@ export const Navbar = () => {
           ))}
         </nav>
 
-        {/* Right side icons and actions */}
-        <div className={cn("flex items-center space-x-2 sm:space-x-3", {"md:ml-auto": true } )}> {/* ml-auto only on md+ if nav is centered */}
+        <div className={cn("flex items-center space-x-2 sm:space-x-3", {"md:ml-auto": true } )}>
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleCart} aria-label="Open cart" className="relative">
             <FaShoppingCart className="h-5 w-5" />
@@ -93,17 +96,17 @@ export const Navbar = () => {
                     <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
                   </div>
                   {userNavLinks.map(link => (
-                     <Link key={link.href} href={link.href} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted" role="menuitem">
-                        {/* link.icon would be nice here */} {link.label}
+                     <Link key={link.href} href={link.href} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted" role="menuitem" onClick={closeMobileMenu}>
+                        {link.icon && <span className="w-4 h-4">{link.icon}</span>} {link.label}
                      </Link>
                   ))}
                   {(session.user.role === "ADMIN" || session.user.role === "MANAGER") && (
-                    <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted" role="menuitem">
+                    <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted" role="menuitem" onClick={closeMobileMenu}>
                         Admin Dashboard
                     </Link>
                   )}
                   <button
-                    onClick={() => signOut({ callbackUrl: '/' })}
+                    onClick={() => { signOut({ callbackUrl: '/' }); closeMobileMenu(); }}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/10"
                     role="menuitem"
                   >
@@ -116,12 +119,11 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-background shadow-lg border-t border-border z-40"> {/* Ensure z-index below sticky header */}
+        <div className="md:hidden absolute top-16 left-0 w-full bg-background shadow-lg border-t border-border z-40">
           <nav className="flex flex-col space-y-1 px-3 py-4">
             {mainNavLinks.map((link) => (
-              <Link key={link.label} href={link.href} onClick={toggleMobileMenu}
+              <Link key={link.label} href={link.href} onClick={closeMobileMenu}
                 className="block rounded-md px-3 py-2.5 text-base font-medium text-muted-foreground hover:bg-muted hover:text-primary">
                 {link.label}
               </Link>
@@ -130,24 +132,24 @@ export const Navbar = () => {
             {status === "authenticated" && session?.user ? (
                 <>
                      {userNavLinks.map(link => (
-                         <Link key={link.href} href={link.href} onClick={toggleMobileMenu}
+                         <Link key={link.href} href={link.href} onClick={closeMobileMenu}
                             className="block rounded-md px-3 py-2.5 text-base font-medium text-muted-foreground hover:bg-muted hover:text-primary">
                             {link.label}
                          </Link>
                       ))}
                       {(session.user.role === "ADMIN" || session.user.role === "MANAGER") && (
-                        <Link href="/admin/dashboard" onClick={toggleMobileMenu}
+                        <Link href="/admin/dashboard" onClick={closeMobileMenu}
                             className="block rounded-md px-3 py-2.5 text-base font-medium text-muted-foreground hover:bg-muted hover:text-primary">
                             Admin Dashboard
                         </Link>
                       )}
-                     <button onClick={() => { signOut({ callbackUrl: '/' }); toggleMobileMenu(); }}
+                     <button onClick={() => { signOut({ callbackUrl: '/' }); closeMobileMenu(); }}
                         className="block w-full rounded-md px-3 py-2.5 text-left text-base font-medium text-destructive hover:bg-destructive/10">
                         Sign Out
                       </button>
                 </>
             ) : status === "unauthenticated" ? (
-                <Button onClick={() => { signIn(); toggleMobileMenu(); }} variant="default" className="w-full mt-2">Sign In</Button>
+                <Button onClick={() => { signIn(); closeMobileMenu(); }} variant="default" className="w-full mt-2">Sign In</Button>
             ) : null}
           </nav>
         </div>

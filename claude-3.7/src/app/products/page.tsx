@@ -3,7 +3,6 @@ import { type Metadata } from "next";
 import Link from "next/link";
 import { ProductGrid } from "~/components/products/ProductGrid";
 import { createServerActionClient } from "~/trpc/server";
-import { Button } from "~/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "All Products - The Scent",
@@ -15,37 +14,30 @@ interface ProductsPageProps {
     page?: string;
     sortBy?: string;
     category?: string;
-    // ... other potential filters
   };
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  // Access searchParams properties at the beginning
   const pageParam = searchParams?.page;
   const sortByParam = searchParams?.sortBy;
   const categoryParam = searchParams?.category;
 
-  const currentPage = parseInt(pageParam || "1");
+  // currentPage is not directly used in the `getAll` call yet, but parsed for potential future use.
+  // const currentPage = parseInt(pageParam || "1"); 
   const limit = 12; 
 
-  // Declare serverApi ONCE here
   const serverApi = await createServerActionClient();
 
   let productsData;
   try {
     productsData = await serverApi.products.getAll({
       limit,
-      categoryId: categoryParam, // Pass the category to the API
-      sortBy: sortByParam as any, // Pass sort - ensure your API handles this type
-      // Add cursor logic for pagination based on currentPage if needed
+      // cursor: If implementing cursor pagination, this would be derived from pageParam or another cursor value.
+      categoryId: categoryParam,
+      sortBy: sortByParam as any, // Cast if your tRPC router's sortBy enum is specific and different from string.
     });
   } catch (error) {
     console.error("Error fetching products for ProductsPage:", error);
-    if (error instanceof Error && 'shape' in error && (error as any).shape?.data?.code === 'NOT_FOUND') {
-        console.warn("A specific sub-procedure might be missing for products.getAll filters or includes.");
-    } else if (error instanceof Error && 'shape' in error) { 
-        console.error("TRPC Error Shape:", (error as any).shape);
-    }
     productsData = { items: [], nextCursor: undefined };
   }
 
@@ -59,10 +51,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        <aside className="lg:col-span-1 lg:sticky lg:top-24 self-start"> {/* Ensure top value matches navbar height + some space */}
+        <aside className="lg:col-span-1 lg:sticky lg:top-24 self-start">
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h2 className="text-xl font-semibold text-foreground font-head mb-4">Filter & Sort</h2>
-            {/* <ProductFiltersClient currentFilters={{ category: categoryParam, sortBy: sortByParam }} /> */}
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-medium text-foreground mb-2 font-accent uppercase tracking-wider">Categories</h3>
@@ -71,6 +62,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                     <li><Link href={`/products?category=diffusers${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Diffusers</Link></li>
                     <li><Link href={`/products?category=candles${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Candles</Link></li>
                     <li><Link href={`/products?category=blends${sortByParam ? `&sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Signature Blends</Link></li>
+                    <li><Link href={`/products${sortByParam ? `?sortBy=${sortByParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors font-semibold">All Categories</Link></li>
                 </ul>
               </div>
               <div>
@@ -80,6 +72,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                     <li><Link href={`/products?sortBy=price_asc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Price: Low to High</Link></li>
                     <li><Link href={`/products?sortBy=price_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Price: High to Low</Link></li>
                     <li><Link href={`/products?sortBy=rating_desc${categoryParam ? `&category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors">Rating</Link></li>
+                    <li><Link href={`/products${categoryParam ? `?category=${categoryParam}` : ''}`} className="text-muted-foreground hover:text-primary transition-colors font-semibold">Default</Link></li>
                 </ul>
               </div>
             </div>
