@@ -14,7 +14,9 @@ interface CollectionPageProps {
   };
 }
 
-export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
+export async function generateMetadata(props: CollectionPageProps): Promise<Metadata> {
+  // Await params before accessing its properties (Next.js 14+ dynamic API)
+  const params = await props.params;
   const slug = params.slug; 
   
   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
@@ -33,7 +35,10 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   };
 }
 
-export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
+export default async function CollectionPage(props: CollectionPageProps) {
+  // Await params and searchParams before accessing their properties (Next.js 14+ dynamic API)
+  const params = await props.params;
+  const searchParams = await props.searchParams;
   const slug = params.slug; 
   const pageParam = searchParams?.page; 
   const sortByParam = searchParams?.sortBy;

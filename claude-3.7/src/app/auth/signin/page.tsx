@@ -15,8 +15,9 @@ interface SignInPageProps {
   };
 }
 
-export default async function SignInPage({ searchParams }: SignInPageProps) {
-  // Access searchParams properties at the beginning of the function
+export default async function SignInPage(props: SignInPageProps) {
+  // Await searchParams before accessing its properties (Next.js 14+ dynamic API)
+  const searchParams = await props.searchParams;
   const error = searchParams?.error;
   const callbackUrl = searchParams?.callbackUrl;
 
