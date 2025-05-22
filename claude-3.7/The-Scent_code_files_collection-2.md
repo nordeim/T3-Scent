@@ -2,21 +2,23 @@
 ```tsx
 // src/app/collections/[slug]/page.tsx
 import { type Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound } from "next/navigation"; // Keep for potential use
 import Link from "next/link";
 import { ProductGrid } from "~/components/products/ProductGrid";
 import { createServerActionClient } from "~/trpc/server";
 import { env } from "~/env.js";
 
 interface CollectionPageProps {
-  params: { slug: string };
+  params: { slug: string }; // params is required for dynamic routes
   searchParams?: { 
     page?: string;
     sortBy?: string;
   };
 }
 
-export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
+export async function generateMetadata(props: CollectionPageProps): Promise<Metadata> {
+  // `props.params` is directly available in generateMetadata
+  const params = props.params;
   const slug = params.slug; 
   
   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
@@ -35,21 +37,25 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   };
 }
 
-export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
+export default async function CollectionPage(props: CollectionPageProps) {
+  // Adhering to the pattern of accessing params and searchParams from props.
+  const params = props.params;
+  const searchParams = props.searchParams;
+
   const slug = params.slug; 
   const pageParam = searchParams?.page; 
   const sortByParam = searchParams?.sortBy;
 
   const serverApi = await createServerActionClient();
   
-  // const currentPage = parseInt(pageParam || "1"); // Not used in current API call
+  // const currentPage = parseInt(pageParam || "1"); // Not used in current API call logic
   const limit = 12; 
 
   let productsData;
   let collectionName = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   let collectionDescription = `Browse through the finest items in our ${collectionName} selection.`;
 
-  // Placeholder: If you have a `serverApi.collections.getBySlug` procedure, you could use it here.
+  // Placeholder: Actual logic to fetch collection details if needed
   // try {
   //   const collectionDetails = await serverApi.collections.getBySlug({ slug }); 
   //   if (!collectionDetails) notFound();
@@ -57,7 +63,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   //   collectionDescription = collectionDetails.description || collectionDescription;
   // } catch (error) {
   //   console.error(`Error fetching collection details for ${slug}:`, error);
-  //   // Handle error, potentially call notFound()
+  //   // Consider calling notFound() or showing an error state
   // }
 
   try {

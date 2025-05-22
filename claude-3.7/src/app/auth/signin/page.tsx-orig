@@ -9,17 +9,14 @@ export const metadata: Metadata = {
 };
 
 interface SignInPageProps {
-  searchParams?: { // searchParams itself is optional at the page level
+  searchParams?: {
     callbackUrl?: string;
     error?: string; 
   };
 }
 
-export default async function SignInPage(props: SignInPageProps) {
-  // Adhering to the pattern of accessing searchParams from props for clarity with Next.js dynamic rendering.
-  // Note: `props.searchParams` in Server Components is an object, not a promise.
-  // The `async` nature of the Page component is key for Next.js.
-  const searchParams = props.searchParams; 
+export default async function SignInPage({ searchParams }: SignInPageProps) {
+  // Access searchParams properties at the beginning of the function
   const error = searchParams?.error;
   const callbackUrl = searchParams?.callbackUrl;
 

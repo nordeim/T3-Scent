@@ -1,3 +1,31 @@
+Console Error
+
+
+[[ << query #1 ]quiz.getAdvancedQuizQuestions {}
+
+Call Stack
+9
+
+Hide 9 ignore-listed frame(s)
+createConsoleError
+../src/client/components/errors/console-error.ts (18:35)
+handleConsoleError
+../src/client/components/errors/use-error-handler.ts (30:13)
+error
+../src/client/components/globals/intercept-console-error.ts (32:9)
+eval
+node_modules/@trpc/client/dist/links/loggerLink.mjs (119:1)
+logResult
+node_modules/@trpc/client/dist/links/loggerLink.mjs (155:1)
+Object.error
+node_modules/@trpc/client/dist/links/loggerLink.mjs (168:1)
+Object.error
+node_modules/@trpc/server/dist/observable/operators.mjs (83:1)
+Object.error
+node_modules/@trpc/server/dist/observable/observable.mjs (38:1)
+eval
+node_modules/@trpc/client/dist/links/httpBatchLink.mjs (96:1)
+
 Error: [[ << query #1 ]quiz.getAdvancedQuizQuestions {}
     at createConsoleError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/errors/console-error.js:27:71)
     at handleConsoleError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/errors/use-error-handler.js:47:54)
@@ -9,6 +37,8 @@ Error: [[ << query #1 ]quiz.getAdvancedQuizQuestions {}
     at Object.error (webpack-internal:///(app-pages-browser)/./node_modules/@trpc/server/dist/observable/observable.mjs:45:37)
     at eval (webpack-internal:///(app-pages-browser)/./node_modules/@trpc/client/dist/links/httpBatchLink.mjs:106:30)
 
+$ rm -rf .next/
+pete@pop-os:/cdrom/project/T3-Scent/claude-3.7
 $ npm run dev
 
 > the_scent@0.1.0 dev
@@ -23,191 +53,189 @@ $ npm run dev
  ✓ Ready in 2.1s
  ○ Compiling / ...
 [Error: Cannot apply unknown utility class: border-border]
- ✓ Compiled / in 9.6s (1594 modules)
+ ✓ Compiled / in 9.4s (1594 modules)
 prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."description", "public"."products"."price", "public"."products"."compareAtPrice", "public"."products"."costPrice", "public"."products"."sku", "public"."products"."barcode", "public"."products"."weight", "public"."products"."dimensions", "public"."products"."inStock", "public"."products"."lowStockThreshold", "public"."products"."stockQuantity", "public"."products"."featured", "public"."products"."bestSeller", "public"."products"."isNew", "public"."products"."onSale", "public"."products"."saleEndDate", "public"."products"."publishedAt", "public"."products"."metaTitle", "public"."products"."metaDescription", "public"."products"."modelUrl", "public"."products"."arPlacement", "public"."products"."leadTime", "public"."products"."safetyStock", "public"."products"."turnoverRate", "public"."products"."forecastedDemand", "public"."products"."depletionDate", "public"."products"."createdAt", "public"."products"."updatedAt" FROM "public"."products" WHERE ("public"."products"."publishedAt" IS NOT NULL AND "public"."products"."publishedAt" <= $1 AND "public"."products"."featured" = $2) ORDER BY "public"."products"."createdAt" DESC LIMIT $3 OFFSET $4
- GET / 200 in 12130ms
+ GET / 200 in 11871ms
  ○ Compiling /api/auth/[...nextauth] ...
- ✓ Compiled /api/auth/[...nextauth] in 1689ms (1587 modules)
- GET /api/auth/session 200 in 2775ms
- GET /api/auth/session 200 in 42ms
+ ✓ Compiled /api/auth/[...nextauth] in 1780ms (1587 modules)
+ GET /api/auth/session 200 in 2884ms
+ GET /api/auth/session 200 in 40ms
  ○ Compiling /contact ...
- ✓ Compiled /contact in 625ms (1603 modules)
- GET /contact 200 in 755ms
- ✓ Compiled /faq in 418ms (1605 modules)
- GET /faq 200 in 520ms
+ ✓ Compiled /contact in 652ms (1603 modules)
+ GET /contact 200 in 789ms
+ ✓ Compiled /faq in 420ms (1605 modules)
+ GET /faq 200 in 522ms
  ○ Compiling /account/orders ...
- ✓ Compiled /account/orders in 1110ms (1632 modules)
- GET /account/orders 200 in 1492ms
+ ✓ Compiled /account/orders in 1189ms (1632 modules)
+ GET /account/orders 200 in 1672ms
  ○ Compiling /auth/signin ...
- ✓ Compiled /auth/signin in 537ms (1642 modules)
+ ✓ Compiled /auth/signin in 624ms (1642 modules)
 Error: Route "/auth/signin" used `searchParams.error`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at SignInPage (src/app/auth/signin/page.tsx:20:16)
-  18 | export default async function SignInPage({ searchParams }: SignInPageProps) {
-  19 |   // Access searchParams properties at the beginning of the function
-> 20 |   const error = searchParams?.error;
+    at SignInPage (src/app/auth/signin/page.tsx:23:16)
+  21 |   // The `async` nature of the Page component is key for Next.js.
+  22 |   const searchParams = props.searchParams; 
+> 23 |   const error = searchParams?.error;
      |                ^
-  21 |   const callbackUrl = searchParams?.callbackUrl;
-  22 |
-  23 |   return (
+  24 |   const callbackUrl = searchParams?.callbackUrl;
+  25 |
+  26 |   return (
 Error: Route "/auth/signin" used `searchParams.callbackUrl`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at SignInPage (src/app/auth/signin/page.tsx:21:22)
-  19 |   // Access searchParams properties at the beginning of the function
-  20 |   const error = searchParams?.error;
-> 21 |   const callbackUrl = searchParams?.callbackUrl;
+    at SignInPage (src/app/auth/signin/page.tsx:24:22)
+  22 |   const searchParams = props.searchParams; 
+  23 |   const error = searchParams?.error;
+> 24 |   const callbackUrl = searchParams?.callbackUrl;
      |                      ^
-  22 |
-  23 |   return (
-  24 |     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-muted/30 px-4 py-12 sm:px-6 lg:px-8 dark:bg-background">
- GET /auth/signin?callbackUrl=%2Faccount%2Fprofile 200 in 644ms
+  25 |
+  26 |   return (
+  27 |     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-muted/30 px-4 py-12 sm:px-6 lg:px-8 dark:bg-background">
+ GET /auth/signin?callbackUrl=%2Faccount%2Fprofile 200 in 732ms
 Error: Route "/auth/signin" used `searchParams.error`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at SignInPage (src/app/auth/signin/page.tsx:20:16)
-  18 | export default async function SignInPage({ searchParams }: SignInPageProps) {
-  19 |   // Access searchParams properties at the beginning of the function
-> 20 |   const error = searchParams?.error;
+    at SignInPage (src/app/auth/signin/page.tsx:23:16)
+  21 |   // The `async` nature of the Page component is key for Next.js.
+  22 |   const searchParams = props.searchParams; 
+> 23 |   const error = searchParams?.error;
      |                ^
-  21 |   const callbackUrl = searchParams?.callbackUrl;
-  22 |
-  23 |   return (
+  24 |   const callbackUrl = searchParams?.callbackUrl;
+  25 |
+  26 |   return (
 Error: Route "/auth/signin" used `searchParams.callbackUrl`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at SignInPage (src/app/auth/signin/page.tsx:21:22)
-  19 |   // Access searchParams properties at the beginning of the function
-  20 |   const error = searchParams?.error;
-> 21 |   const callbackUrl = searchParams?.callbackUrl;
+    at SignInPage (src/app/auth/signin/page.tsx:24:22)
+  22 |   const searchParams = props.searchParams; 
+  23 |   const error = searchParams?.error;
+> 24 |   const callbackUrl = searchParams?.callbackUrl;
      |                      ^
-  22 |
-  23 |   return (
-  24 |     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-muted/30 px-4 py-12 sm:px-6 lg:px-8 dark:bg-background">
- GET /auth/signin?callbackUrl=%2Faccount%2Fprofile 200 in 37ms
- GET /api/auth/providers 200 in 92ms
- GET /api/auth/providers 200 in 15ms
- ○ Compiling /shipping-returns ...
- ✓ Compiled /shipping-returns in 597ms (1647 modules)
- GET /shipping-returns 200 in 686ms
+  25 |
+  26 |   return (
+  27 |     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-muted/30 px-4 py-12 sm:px-6 lg:px-8 dark:bg-background">
+ GET /auth/signin?callbackUrl=%2Faccount%2Fprofile 200 in 46ms
+ GET /api/auth/providers 200 in 85ms
+ GET /api/auth/providers 200 in 13ms
+ ✓ Compiled /shipping-returns in 478ms (1647 modules)
+ GET /shipping-returns 200 in 570ms
  ○ Compiling /products ...
- ✓ Compiled /products in 2.6s (1652 modules)
+ ✓ Compiled /products in 2.8s (1652 modules)
 Error: Route "/products" used `searchParams.page`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at ProductsPage (src/app/products/page.tsx:21:20)
-  19 |
-  20 | export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-> 21 |   const pageParam = searchParams?.page;
+    at ProductsPage (src/app/products/page.tsx:23:20)
+  21 |   // Adhering to the pattern of accessing searchParams from props.
+  22 |   const searchParams = props.searchParams; 
+> 23 |   const pageParam = searchParams?.page;
      |                    ^
-  22 |   const sortByParam = searchParams?.sortBy;
-  23 |   const categoryParam = searchParams?.category;
-  24 |
+  24 |   const sortByParam = searchParams?.sortBy;
+  25 |   const categoryParam = searchParams?.category;
+  26 |
 Error: Route "/products" used `searchParams.sortBy`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at ProductsPage (src/app/products/page.tsx:22:22)
-  20 | export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  21 |   const pageParam = searchParams?.page;
-> 22 |   const sortByParam = searchParams?.sortBy;
+    at ProductsPage (src/app/products/page.tsx:24:22)
+  22 |   const searchParams = props.searchParams; 
+  23 |   const pageParam = searchParams?.page;
+> 24 |   const sortByParam = searchParams?.sortBy;
      |                      ^
-  23 |   const categoryParam = searchParams?.category;
-  24 |
-  25 |   // currentPage is not directly used in the `getAll` call yet, but parsed for potential future use.
+  25 |   const categoryParam = searchParams?.category;
+  26 |
+  27 |   // const currentPage = parseInt(pageParam || "1"); // Not used directly in API call
 Error: Route "/products" used `searchParams.category`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at ProductsPage (src/app/products/page.tsx:23:24)
-  21 |   const pageParam = searchParams?.page;
-  22 |   const sortByParam = searchParams?.sortBy;
-> 23 |   const categoryParam = searchParams?.category;
+    at ProductsPage (src/app/products/page.tsx:25:24)
+  23 |   const pageParam = searchParams?.page;
+  24 |   const sortByParam = searchParams?.sortBy;
+> 25 |   const categoryParam = searchParams?.category;
      |                        ^
-  24 |
-  25 |   // currentPage is not directly used in the `getAll` call yet, but parsed for potential future use.
-  26 |   // const currentPage = parseInt(pageParam || "1"); 
+  26 |
+  27 |   // const currentPage = parseInt(pageParam || "1"); // Not used directly in API call
+  28 |   const limit = 12; 
 prisma:query SELECT 1
 prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."description", "public"."products"."price", "public"."products"."compareAtPrice", "public"."products"."costPrice", "public"."products"."sku", "public"."products"."barcode", "public"."products"."weight", "public"."products"."dimensions", "public"."products"."inStock", "public"."products"."lowStockThreshold", "public"."products"."stockQuantity", "public"."products"."featured", "public"."products"."bestSeller", "public"."products"."isNew", "public"."products"."onSale", "public"."products"."saleEndDate", "public"."products"."publishedAt", "public"."products"."metaTitle", "public"."products"."metaDescription", "public"."products"."modelUrl", "public"."products"."arPlacement", "public"."products"."leadTime", "public"."products"."safetyStock", "public"."products"."turnoverRate", "public"."products"."forecastedDemand", "public"."products"."depletionDate", "public"."products"."createdAt", "public"."products"."updatedAt" FROM "public"."products" WHERE ("public"."products"."publishedAt" IS NOT NULL AND "public"."products"."publishedAt" <= $1) ORDER BY "public"."products"."createdAt" DESC LIMIT $2 OFFSET $3
- GET /products 200 in 3024ms
+ GET /products 200 in 3236ms
  ○ Compiling /collections/[slug] ...
- ✓ Compiled /collections/[slug] in 658ms (1654 modules)
+ ✓ Compiled /collections/[slug] in 676ms (1654 modules)
 Error: Route "/collections/[slug]" used `params.slug`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at CollectionPage (src/app/collections/[slug]/page.tsx:37:22)
-  35 |
-  36 | export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
-> 37 |   const slug = params.slug; 
+    at CollectionPage (src/app/collections/[slug]/page.tsx:43:22)
+  41 |   const searchParams = props.searchParams;
+  42 |
+> 43 |   const slug = params.slug; 
      |                      ^
-  38 |   const pageParam = searchParams?.page; 
-  39 |   const sortByParam = searchParams?.sortBy;
-  40 |
+  44 |   const pageParam = searchParams?.page; 
+  45 |   const sortByParam = searchParams?.sortBy;
+  46 |
 Error: Route "/collections/[slug]" used `searchParams.page`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at CollectionPage (src/app/collections/[slug]/page.tsx:38:20)
-  36 | export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
-  37 |   const slug = params.slug; 
-> 38 |   const pageParam = searchParams?.page; 
+    at CollectionPage (src/app/collections/[slug]/page.tsx:44:20)
+  42 |
+  43 |   const slug = params.slug; 
+> 44 |   const pageParam = searchParams?.page; 
      |                    ^
-  39 |   const sortByParam = searchParams?.sortBy;
-  40 |
-  41 |   const serverApi = await createServerActionClient();
+  45 |   const sortByParam = searchParams?.sortBy;
+  46 |
+  47 |   const serverApi = await createServerActionClient();
 Error: Route "/collections/[slug]" used `searchParams.sortBy`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at CollectionPage (src/app/collections/[slug]/page.tsx:39:22)
-  37 |   const slug = params.slug; 
-  38 |   const pageParam = searchParams?.page; 
-> 39 |   const sortByParam = searchParams?.sortBy;
+    at CollectionPage (src/app/collections/[slug]/page.tsx:45:22)
+  43 |   const slug = params.slug; 
+  44 |   const pageParam = searchParams?.page; 
+> 45 |   const sortByParam = searchParams?.sortBy;
      |                      ^
-  40 |
-  41 |   const serverApi = await createServerActionClient();
-  42 |   
+  46 |
+  47 |   const serverApi = await createServerActionClient();
+  48 |   
 Error: Route "/collections/[slug]" used `params.slug`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at Module.generateMetadata (src/app/collections/[slug]/page.tsx:18:22)
-  16 |
-  17 | export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
-> 18 |   const slug = params.slug; 
+    at Module.generateMetadata (src/app/collections/[slug]/page.tsx:20:22)
+  18 |   // `props.params` is directly available in generateMetadata
+  19 |   const params = props.params;
+> 20 |   const slug = params.slug; 
      |                      ^
-  19 |   
-  20 |   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-  21 |   const title = `${collectionNameFromSlug} Collection - The Scent`;
+  21 |   
+  22 |   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  23 |   const title = `${collectionNameFromSlug} Collection - The Scent`;
 prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."description", "public"."products"."price", "public"."products"."compareAtPrice", "public"."products"."costPrice", "public"."products"."sku", "public"."products"."barcode", "public"."products"."weight", "public"."products"."dimensions", "public"."products"."inStock", "public"."products"."lowStockThreshold", "public"."products"."stockQuantity", "public"."products"."featured", "public"."products"."bestSeller", "public"."products"."isNew", "public"."products"."onSale", "public"."products"."saleEndDate", "public"."products"."publishedAt", "public"."products"."metaTitle", "public"."products"."metaDescription", "public"."products"."modelUrl", "public"."products"."arPlacement", "public"."products"."leadTime", "public"."products"."safetyStock", "public"."products"."turnoverRate", "public"."products"."forecastedDemand", "public"."products"."depletionDate", "public"."products"."createdAt", "public"."products"."updatedAt" FROM "public"."products" WHERE ("public"."products"."publishedAt" IS NOT NULL AND "public"."products"."publishedAt" <= $1 AND EXISTS(SELECT "t0"."B" FROM "public"."_ProductToCollection" AS "t0" INNER JOIN "public"."collections" AS "j0" ON ("j0"."id") = ("t0"."A") WHERE ("j0"."slug" = $2 AND ("public"."products"."id") = ("t0"."B") AND "t0"."B" IS NOT NULL))) ORDER BY "public"."products"."createdAt" DESC LIMIT $3 OFFSET $4
- GET /collections/new-arrivals 200 in 1939ms
+ GET /collections/new-arrivals 200 in 2034ms
 Error: Route "/collections/[slug]" used `params.slug`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at CollectionPage (src/app/collections/[slug]/page.tsx:37:22)
-  35 |
-  36 | export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
-> 37 |   const slug = params.slug; 
+    at CollectionPage (src/app/collections/[slug]/page.tsx:43:22)
+  41 |   const searchParams = props.searchParams;
+  42 |
+> 43 |   const slug = params.slug; 
      |                      ^
-  38 |   const pageParam = searchParams?.page; 
-  39 |   const sortByParam = searchParams?.sortBy;
-  40 |
+  44 |   const pageParam = searchParams?.page; 
+  45 |   const sortByParam = searchParams?.sortBy;
+  46 |
 Error: Route "/collections/[slug]" used `searchParams.page`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at CollectionPage (src/app/collections/[slug]/page.tsx:38:20)
-  36 | export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
-  37 |   const slug = params.slug; 
-> 38 |   const pageParam = searchParams?.page; 
+    at CollectionPage (src/app/collections/[slug]/page.tsx:44:20)
+  42 |
+  43 |   const slug = params.slug; 
+> 44 |   const pageParam = searchParams?.page; 
      |                    ^
-  39 |   const sortByParam = searchParams?.sortBy;
-  40 |
-  41 |   const serverApi = await createServerActionClient();
+  45 |   const sortByParam = searchParams?.sortBy;
+  46 |
+  47 |   const serverApi = await createServerActionClient();
 Error: Route "/collections/[slug]" used `searchParams.sortBy`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at CollectionPage (src/app/collections/[slug]/page.tsx:39:22)
-  37 |   const slug = params.slug; 
-  38 |   const pageParam = searchParams?.page; 
-> 39 |   const sortByParam = searchParams?.sortBy;
+    at CollectionPage (src/app/collections/[slug]/page.tsx:45:22)
+  43 |   const slug = params.slug; 
+  44 |   const pageParam = searchParams?.page; 
+> 45 |   const sortByParam = searchParams?.sortBy;
      |                      ^
-  40 |
-  41 |   const serverApi = await createServerActionClient();
-  42 |   
+  46 |
+  47 |   const serverApi = await createServerActionClient();
+  48 |   
 Error: Route "/collections/[slug]" used `params.slug`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at Module.generateMetadata (src/app/collections/[slug]/page.tsx:18:22)
-  16 |
-  17 | export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
-> 18 |   const slug = params.slug; 
+    at Module.generateMetadata (src/app/collections/[slug]/page.tsx:20:22)
+  18 |   // `props.params` is directly available in generateMetadata
+  19 |   const params = props.params;
+> 20 |   const slug = params.slug; 
      |                      ^
-  19 |   
-  20 |   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-  21 |   const title = `${collectionNameFromSlug} Collection - The Scent`;
+  21 |   
+  22 |   const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  23 |   const title = `${collectionNameFromSlug} Collection - The Scent`;
 prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."description", "public"."products"."price", "public"."products"."compareAtPrice", "public"."products"."costPrice", "public"."products"."sku", "public"."products"."barcode", "public"."products"."weight", "public"."products"."dimensions", "public"."products"."inStock", "public"."products"."lowStockThreshold", "public"."products"."stockQuantity", "public"."products"."featured", "public"."products"."bestSeller", "public"."products"."isNew", "public"."products"."onSale", "public"."products"."saleEndDate", "public"."products"."publishedAt", "public"."products"."metaTitle", "public"."products"."metaDescription", "public"."products"."modelUrl", "public"."products"."arPlacement", "public"."products"."leadTime", "public"."products"."safetyStock", "public"."products"."turnoverRate", "public"."products"."forecastedDemand", "public"."products"."depletionDate", "public"."products"."createdAt", "public"."products"."updatedAt" FROM "public"."products" WHERE ("public"."products"."publishedAt" IS NOT NULL AND "public"."products"."publishedAt" <= $1 AND EXISTS(SELECT "t0"."B" FROM "public"."_ProductToCollection" AS "t0" INNER JOIN "public"."collections" AS "j0" ON ("j0"."id") = ("t0"."A") WHERE ("j0"."slug" = $2 AND ("public"."products"."id") = ("t0"."B") AND "t0"."B" IS NOT NULL))) ORDER BY "public"."products"."createdAt" DESC LIMIT $3 OFFSET $4
- GET /collections/best-sellers 200 in 97ms
+ GET /collections/best-sellers 200 in 104ms
  ○ Compiling /gift-cards ...
- ✓ Compiled /gift-cards in 773ms (1659 modules)
- GET /gift-cards 200 in 908ms
+ ✓ Compiled /gift-cards in 707ms (1617 modules)
+ GET /gift-cards 200 in 1108ms
  ○ Compiling /_not-found ...
- ✓ Compiled /_not-found in 638ms (1663 modules)
- GET /images/gift_card_25.jpg 404 in 1293ms
+ ✓ Compiled /_not-found in 545ms (1621 modules)
+ GET /images/gift_card_25.jpg 404 in 1195ms
  ⨯ The requested resource isn't a valid image for /images/gift_card_25.jpg received text/html; charset=utf-8
- GET /images/gift_card_50.jpg 404 in 1295ms
+ GET /images/gift_card_50.jpg 404 in 1199ms
  ⨯ The requested resource isn't a valid image for /images/gift_card_50.jpg received text/html; charset=utf-8
- GET /images/gift_card_100.jpg 404 in 1300ms
+ GET /images/gift_card_100.jpg 404 in 1203ms
  ⨯ The requested resource isn't a valid image for /images/gift_card_100.jpg received text/html; charset=utf-8
- GET /images/gift_card_200.jpg 404 in 1305ms
+ GET /images/gift_card_200.jpg 404 in 1207ms
  ⨯ The requested resource isn't a valid image for /images/gift_card_200.jpg received text/html; charset=utf-8
  ○ Compiling /quiz ...
- ✓ Compiled /quiz in 4.1s (2492 modules)
- GET /quiz 200 in 4212ms
-
+ ✓ Compiled /quiz in 3.6s (2446 modules)
+ GET /quiz 200 in 3733ms
 

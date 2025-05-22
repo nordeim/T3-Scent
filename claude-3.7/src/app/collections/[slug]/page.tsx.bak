@@ -1,0 +1,115 @@
+// src/app/collections/[slug]/page.tsx
+import { type Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ProductGrid } from "~/components/products/ProductGrid";
+import { createServerActionClient } from "~/trpc/server";
+import { env } from "~/env.js";
+
+interface CollectionPageProps {
+  params: { slug: string };
+  searchParams?: { 
+    page?: string;
+    sortBy?: string;
+  };
+}
+
+export async function generateMetadata(props: CollectionPageProps): Promise<Metadata> {
+  // Await params before accessing its properties (Next.js 14+ dynamic API)
+  const params = await props.params;
+  const slug = params.slug; 
+  
+  const collectionNameFromSlug = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  const title = `${collectionNameFromSlug} Collection - The Scent`;
+  const description = `Discover our exclusive ${collectionNameFromSlug} collection, featuring unique aromatherapy products.`;
+
+  return {
+    title,
+    description,
+    metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+    openGraph: {
+      title,
+      description,
+      url: `${env.NEXT_PUBLIC_SITE_URL}/collections/${slug}`,
+    },
+  };
+}
+
+export default async function CollectionPage(props: CollectionPageProps) {
+  // Await params and searchParams before accessing their properties (Next.js 14+ dynamic API)
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const slug = params.slug; 
+  const pageParam = searchParams?.page; 
+  const sortByParam = searchParams?.sortBy;
+
+  const serverApi = await createServerActionClient();
+  
+  // const currentPage = parseInt(pageParam || "1"); // Not used in current API call
+  const limit = 12; 
+
+  let productsData;
+  let collectionName = slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  let collectionDescription = `Browse through the finest items in our ${collectionName} selection.`;
+
+  // Placeholder: If you have a `serverApi.collections.getBySlug` procedure, you could use it here.
+  // try {
+  //   const collectionDetails = await serverApi.collections.getBySlug({ slug }); 
+  //   if (!collectionDetails) notFound();
+  //   collectionName = collectionDetails.name;
+  //   collectionDescription = collectionDetails.description || collectionDescription;
+  // } catch (error) {
+  //   console.error(`Error fetching collection details for ${slug}:`, error);
+  //   // Handle error, potentially call notFound()
+  // }
+
+  try {
+    productsData = await serverApi.products.getAll({
+      collectionSlug: slug,
+      limit,
+      sortBy: sortByParam as any,
+    });
+  } catch (error) {
+    console.error(`Error fetching products for collection ${slug}:`, error);
+    productsData = { items: [], nextCursor: undefined }; 
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="mb-8 md:mb-10 text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+          {collectionName}
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+          {collectionDescription}
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <aside className="lg:col-span-1 lg:sticky lg:top-24 self-start">
+            <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <h2 className="text-xl font-semibold text-foreground mb-4">Refine This Collection</h2>
+                <p className="text-sm text-muted-foreground">(Filters specific to this collection - Placeholder)</p>
+                 <ul className="space-y-1.5 text-sm mt-4">
+                    <li><Link href={`/collections/${slug}?sortBy=createdAt_desc`} className="text-muted-foreground hover:text-primary transition-colors">Newest</Link></li>
+                    <li><Link href={`/collections/${slug}?sortBy=price_asc`} className="text-muted-foreground hover:text-primary transition-colors">Price: Low to High</Link></li>
+                    <li><Link href={`/collections/${slug}?sortBy=price_desc`} className="text-muted-foreground hover:text-primary transition-colors">Price: High to Low</Link></li>
+                </ul>
+            </div>
+        </aside>
+        <main className="lg:col-span-3">
+            {productsData.items.length > 0 ? (
+                <ProductGrid products={productsData.items} />
+            ) : (
+                <div className="py-16 text-center">
+                <p className="text-xl text-muted-foreground">
+                    No products currently in this collection. Check back soon!
+                </p>
+                </div>
+            )}
+            {/* TODO: Add Pagination controls here */}
+        </main>
+      </div>
+    </div>
+  );
+}

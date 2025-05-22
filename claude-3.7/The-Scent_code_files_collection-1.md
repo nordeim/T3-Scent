@@ -2379,20 +2379,21 @@ export const metadata: Metadata = {
 };
 
 interface ProductsPageProps {
-  searchParams?: {
+  searchParams?: { // searchParams itself is optional at the page level
     page?: string;
     sortBy?: string;
     category?: string;
   };
 }
 
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+export default async function ProductsPage(props: ProductsPageProps) {
+  // Adhering to the pattern of accessing searchParams from props.
+  const searchParams = props.searchParams; 
   const pageParam = searchParams?.page;
   const sortByParam = searchParams?.sortBy;
   const categoryParam = searchParams?.category;
 
-  // currentPage is not directly used in the `getAll` call yet, but parsed for potential future use.
-  // const currentPage = parseInt(pageParam || "1"); 
+  // const currentPage = parseInt(pageParam || "1"); // Not used directly in API call
   const limit = 12; 
 
   const serverApi = await createServerActionClient();
@@ -2401,9 +2402,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   try {
     productsData = await serverApi.products.getAll({
       limit,
-      // cursor: If implementing cursor pagination, this would be derived from pageParam or another cursor value.
       categoryId: categoryParam,
-      sortBy: sortByParam as any, // Cast if your tRPC router's sortBy enum is specific and different from string.
+      sortBy: sortByParam as any,
     });
   } catch (error) {
     console.error("Error fetching products for ProductsPage:", error);
@@ -2419,6 +2419,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </p>
       </div>
 
+      {/* Retaining the sidebar and conditional rendering logic */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
         <aside className="lg:col-span-1 lg:sticky lg:top-24 self-start">
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
@@ -2479,14 +2480,17 @@ export const metadata: Metadata = {
 };
 
 interface SignInPageProps {
-  searchParams?: {
+  searchParams?: { // searchParams itself is optional at the page level
     callbackUrl?: string;
     error?: string; 
   };
 }
 
-export default async function SignInPage({ searchParams }: SignInPageProps) {
-  // Access searchParams properties at the beginning of the function
+export default async function SignInPage(props: SignInPageProps) {
+  // Adhering to the pattern of accessing searchParams from props for clarity with Next.js dynamic rendering.
+  // Note: `props.searchParams` in Server Components is an object, not a promise.
+  // The `async` nature of the Page component is key for Next.js.
+  const searchParams = props.searchParams; 
   const error = searchParams?.error;
   const callbackUrl = searchParams?.callbackUrl;
 
